@@ -181,7 +181,6 @@ So when I say "models," I mean text, images, and audio, all through the same kin
 <div class="diagram">
 <img src="assets/diagrams/building-blocks-stack-1.svg" alt="The building-blocks stack with the Models block highlighted." />
 </div>
-</div>
 
 Note:
 One block lit. Models. Hold this picture in your head, because we're going to add to it the rest of the talk.
