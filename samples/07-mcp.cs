@@ -10,7 +10,7 @@
 // Microsoft Learn MCP server and let the model search the docs.
 //
 // The payoff: an MCP tool is just an AIFunction. It drops straight into the same
-// ChatOptions.Tools list you used in 04-tools.cs. No new concept to learn.
+// ChatOptions.Tools list you used in 06-tools.cs. No new concept to learn.
 
 using System.ClientModel;
 using Microsoft.Extensions.AI;
@@ -49,3 +49,4 @@ ChatResponse response = await chat.GetResponseAsync(
 Console.WriteLine(response.Text);
 Console.WriteLine();
 Console.WriteLine("One open standard, every tool. That's MCP.");
+

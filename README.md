@@ -2,8 +2,8 @@
 
 A conference talk and a standalone [reveal.js](https://revealjs.com) deck about building
 AI apps in .NET. The idea is simple: modern AI apps are not "call a model." They are
-composable, interoperable building blocks that live in the `Microsoft.Extensions.*` family
-and fit into the .NET apps you already build.
+composable, interoperable building blocks: the AI primitives every app needs, built the .NET way,
+that fit into the .NET apps you already build.
 
 The talk works bottom-up. We start with one model call, add a block only when the problem
 asks for it, graduate to [Microsoft Agent Framework](https://learn.microsoft.com/agent-framework/),
@@ -20,6 +20,7 @@ as "here's everything together."
 | `assets/diagrams/` | Hand-authored SVG architecture diagrams. |
 | `assets/fonts/` | Self-hosted Space Grotesk + Open Sans (woff2). |
 | `samples/` | Runnable .NET 10 file-based apps, one per building block. |
+| `demo/` | The .NET AI Chat Template (Aspire), the baseline app. The `advanced-demo` branch enhances it. |
 | `talk/` | Speaker outline and abstract. |
 
 ## Run the deck locally
@@ -46,6 +47,13 @@ You need the [.NET 10 SDK](https://dotnet.microsoft.com/download) and a
 cd samples
 dotnet run 01-chat.cs
 ```
+
+## Run the demo app
+
+The `demo/ChatApp` folder is the production .NET AI Chat Template, scaffolded with Aspire. It's
+the "everything together" app from the talk. An enhanced version (layout-aware ingestion plus
+better retrieval) lives on the `advanced-demo` branch, and `git diff main..advanced-demo` is the
+"upgrade, not rewrite" demo. See [`demo/README.md`](demo/README.md) for prerequisites and how to run.
 
 ## Deploy
 

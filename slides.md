@@ -56,18 +56,18 @@ The usual path is gluing together half a dozen libraries from different worlds. 
 
 ---
 
-<span class="kicker">This is home</span>
+<span class="kicker">Built the .NET way</span>
 
-## The blocks are `Microsoft.Extensions.*`
+## AI primitives, native to .NET
 
 <div class="diagram">
-<img src="assets/diagrams/dotnet-stack-fit.svg" alt="The Microsoft.Extensions family, including the AI building blocks, feeding into every .NET app type, orchestrated by Aspire." />
+<img src="assets/diagrams/dotnet-stack-fit.svg" alt="The AI building blocks as their own layer, resting on the .NET patterns you already know, plugging into every .NET app type, orchestrated by Aspire." />
 </div>
 
 Note:
-Look at where these live. Microsoft.Extensions.AI, VectorData, DataIngestion, AI.Evaluation. They sit right next to the extensions you already use every day: dependency injection, configuration, logging, hosting, HTTP.
+Here's the shape of the whole talk. Every AI app needs the same handful of primitives: a way to talk to models, to represent and search data, to call tools, to observe, to evaluate, and to orchestrate agents. .NET ships those primitives as building blocks, and they're built the way you already work.
 Same DI registration. Same builder pattern. Same middleware idea from ASP.NET Core. Same IConfiguration and user-secrets. Same ILogger, same OpenTelemetry. Aspire orchestrates all of it.
-So the message for the whole talk is this: if you know .NET, you already know how to build AI apps. This is home.
+So your .NET skills carry straight over. That's the message for the whole talk: if you know .NET, you already know how to build AI apps.
 
 ---
 
@@ -132,8 +132,55 @@ Run the sample and you'll see the same code answer with gpt-4o-mini and then gpt
 
 --
 
+<span class="kicker">Block 1 · Multimodal</span>
+
+## Models aren't just text
+
+<div class="cols">
+<div class="col-left">
+
+The same `IChatClient` takes images, not just text. Add an image content part and ask about it.
+
+<span class="run">dotnet run 02-vision.cs</span>
+
+Need a picture *out*? `IImageGenerator` is the same one-interface pattern.
+
+<span class="run">dotnet run 03-image-generation.cs</span>
+
+<p class="muted small">Speech-to-text (`ISpeechToTextClient`) is the same pattern. Real-time audio is available today through the provider SDK.</p>
+
+</div>
+<div class="col-left">
+
+```csharp
+ChatMessage msg = new(ChatRole.User,
+[
+    new TextContent("What's in this image?"),
+    new UriContent(url, "image/jpeg")
+]);
+
+ChatResponse seen = await chat.GetResponseAsync([msg]);
+
+// a picture out, same kind of interface
+IImageGenerator images = provider
+    .GetImageClient("dall-e-3").AsIImageGenerator();
+```
+
+</div>
+</div>
+
+<p class="repeat-beat">Familiar .NET pattern · simplest thing that works · interoperable · same foundation</p>
+
+Note:
+Quick one, but it matters. The Models block isn't text-only. The same IChatClient takes images. You build a message with a text part and an image part, hand it over, and ask about the picture. gpt-4o-mini does vision, so that runs on GitHub Models.
+And it goes the other way too. Need an image generated? That's IImageGenerator, the same one-interface, swap-the-provider pattern. Speech-to-text is ISpeechToTextClient, same idea. Real-time audio you can do today through the provider SDK.
+So when I say "models," I mean text, images, and audio, all through the same kind of seam. One pattern, every modality.
+
+--
+
 <div class="diagram">
 <img src="assets/diagrams/building-blocks-stack-1.svg" alt="The building-blocks stack with the Models block highlighted." />
+</div>
 </div>
 
 Note:
@@ -150,7 +197,7 @@ One block lit. Models. Hold this picture in your head, because we're going to ad
 
 `IEmbeddingGenerator` is the same idea as `IChatClient`: one interface, any provider. Turn text into vectors, compare by cosine similarity.
 
-<span class="run">dotnet run 02-embeddings.cs</span>
+<span class="run">dotnet run 04-embeddings.cs</span>
 
 </div>
 <div class="col-left">
@@ -193,7 +240,7 @@ Closer meaning, higher score. That one idea is what powers search and RAG, which
 <span class="badge">in-memory → Qdrant → Azure AI Search</span>
 </div>
 
-<span class="run">dotnet run 03-rag.cs</span>
+<span class="run">dotnet run 05-rag.cs</span>
 
 </div>
 <div class="col-left">
@@ -240,7 +287,7 @@ Two blocks lit. Models, plus data and memory. The picture is filling in.
 
 `AIFunctionFactory` wraps a normal C# method as a tool. `UseFunctionInvocation` runs it when the model asks, then feeds the result back.
 
-<span class="run">dotnet run 04-tools.cs</span>
+<span class="run">dotnet run 06-tools.cs</span>
 
 </div>
 <div class="col-left">
@@ -285,7 +332,7 @@ Model Context Protocol is "HTTP for tools." A server exposes tools once, any cli
 <span class="badge">consume &amp; serve</span>
 </div>
 
-<span class="run">dotnet run 05-mcp.cs</span>
+<span class="run">dotnet run 07-mcp.cs</span>
 
 </div>
 <div class="col-left">
@@ -339,7 +386,7 @@ Exactly like the ASP.NET Core request pipeline. Wrap the client and each piece d
 <span class="badge">Aspire dashboard</span>
 </div>
 
-<span class="run">dotnet run 06-middleware.cs</span>
+<span class="run">dotnet run 08-middleware.cs</span>
 
 </div>
 <div class="col-left">
@@ -384,7 +431,7 @@ Four blocks lit. Now we can ship it. But how do we know it's good, and how do we
 
 This block isn't in the template. You add it in your **test project and CI**.
 
-<span class="run">dotnet run 07-eval.cs</span>
+<span class="run">dotnet run 09-eval.cs</span>
 
 </div>
 <div class="col-left">
@@ -438,7 +485,7 @@ You already have an `IChatClient` and tools. Wrap them as a `ChatClientAgent`. T
 <span class="badge">same IChatClient</span>
 </div>
 
-<span class="run">dotnet run 08-agent.cs</span>
+<span class="run">dotnet run 10-agent.cs</span>
 
 </div>
 <div class="col-left">
@@ -476,7 +523,7 @@ No new mental model, no rewrite. A session carries the conversation so it rememb
 
 One agent is enough until the work has parts. Then you compose them. A concurrent workflow fans out to specialists and fans the results back in.
 
-<span class="run">dotnet run 09-multi-agent.cs</span>
+<span class="run">dotnet run 11-multi-agent.cs</span>
 
 </div>
 <div class="col-left">
@@ -534,7 +581,7 @@ The template is just the blocks, assembled. And evaluations plugs in right here,
 
 <span class="run">dotnet new install Microsoft.Extensions.AI.Templates</span>
 
-<span class="run">dotnet new aichat -o MyChatApp</span>
+<span class="run">dotnet new aichatweb -o MyChatApp --aspire</span>
 
 <span class="run">dotnet run</span>
 
@@ -551,13 +598,47 @@ On the way out it asks which provider you want. GitHub Models to start for free,
 ## Upgrade the defaults
 
 <div class="diagram">
-<img src="assets/diagrams/whats-next.svg" alt="Advanced ingestion and advanced RAG plugging into the template, replacing the default building blocks." />
+<img src="assets/diagrams/whats-next.svg" alt="Advanced ingestion and advanced retrieval plugging into the template, replacing its default building blocks." />
 </div>
 
 Note:
-Two things we're exploring, both shown as upgrades to the template's defaults.
-First, advanced ingestion. The template handles simple documents. For real PDFs with layout, tables, and images, there's a composable ingestion pipeline, reader to chunker to enricher to writer, with ONNX layout detection. Every step swappable.
-Second, advanced RAG. Better retrieval than the default top-k. Because the blocks are swappable, these aren't rewrites. You replace one default and keep everything else.
+Two upgrades worth knowing about, and they're about problems, not products.
+First problem: real documents are messy. The template handles simple files, but production PDFs have layout, tables, and images. The fix is a composable ingestion pipeline, reader to chunker to enricher to writer, with layout detection. Every step swappable. If you want a worked example, there's one called PdfAIngest.
+Second problem: default top-k retrieval is rarely good enough. Advanced retrieval adds reranking, filtering, and query rewriting. There's an advanced-rag sample to go deeper.
+The point is the shape. Because the blocks are swappable, these aren't rewrites. You replace one default and keep everything else. Which is exactly what I'll show you next.
+
+---
+
+<span class="kicker">The final demo</span>
+
+## Upgrade, not rewrite
+
+<div class="cols">
+<div class="col-left">
+
+Same template. Two blocks swapped: layout-aware ingestion and better retrieval. Everything else stays put.
+
+<span class="run">git diff main..advanced-demo</span>
+
+<p class="muted small">The diff is the whole point. A few changed components, not a new app.</p>
+
+</div>
+<div class="col-left">
+
+- `main` — the scaffolded template, default ingestion and RAG
+- `advanced-demo` — same app, advanced ingestion + advanced retrieval
+
+Run it on a real PDF and watch the grounding improve.
+
+</div>
+</div>
+
+<p class="repeat-beat">Swap a default · keep everything else · same foundation</p>
+
+Note:
+This is the payoff for the whole swappable-blocks story, live. I took the template you just saw, made a branch called advanced-demo, and changed exactly two things: the ingestion got layout-aware, and the retrieval got smarter.
+Then look at the diff. Main versus the branch. It's small. A few components swapped, the Blazor UI and the wiring untouched. That's the thesis on screen: upgrading an AI app is changing a block, not starting over.
+I'll run the branch on a real PDF so you can see the same questions get better-grounded answers.
 
 ---
 
@@ -578,7 +659,7 @@ Second, advanced RAG. Better retrieval than the default top-k. Because the block
 
 Note:
 Let's bring it home. Six blocks. Models, data and memory, tools and MCP, middleware, evaluations, agents.
-Every one is a Microsoft.Extensions library. Every one uses the DI, builder, and middleware patterns you already know. Every one sits on the same IChatClient foundation and on open standards. So moving from a single model call all the way to a multi-agent workflow was adding blocks, never starting over.
+Every one is built the .NET way. Every one uses the DI, builder, and middleware patterns you already know. Every one sits on the same IChatClient foundation and on open standards. So moving from a single model call all the way to a multi-agent workflow was adding blocks, never starting over.
 Building blocks for the AI age, and they're already part of .NET. You learn it once and use it everywhere.
 
 ---
@@ -591,11 +672,11 @@ Building blocks for the AI age, and they're already part of .NET. You learn it o
 <div class="col-left">
 
 **Try**
-<span class="run">dotnet new aichat -o MyChatApp</span>
+<span class="run">dotnet new aichatweb -o MyChatApp --aspire</span>
 
 **Learn**
 - The .NET + AI hub: `learn.microsoft.com/dotnet/ai`
-- All nine samples in this repo
+- All eleven samples in this repo
 
 </div>
 <div class="col-left">
