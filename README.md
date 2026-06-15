@@ -23,6 +23,14 @@ as "here's everything together."
 | `demo/` | The .NET AI Chat Template (Aspire), the baseline app. The `advanced-demo` branch enhances it. |
 | `talk/` | Speaker outline and abstract. |
 
+## Run in a dev container
+
+Want a ready-made environment? This repo ships a [dev container](.devcontainer/devcontainer.json)
+with the .NET 10 SDK, Node, and the GitHub CLI. Open it in a GitHub Codespace or locally with the
+VS Code Dev Containers extension, and you can run the samples and the presentation right away. See
+[`.devcontainer/README.md`](.devcontainer/README.md) for token setup. The container does not run
+`demo/ChatApp` (that needs Docker and Aspire).
+
 ## Run the deck locally
 
 You need [Node.js](https://nodejs.org) 18+.

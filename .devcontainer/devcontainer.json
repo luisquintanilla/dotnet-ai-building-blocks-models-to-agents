@@ -1,0 +1,49 @@
+{
+  // Dev container for the talk. It gives you everything to:
+  //   - run the .NET 10 file-based samples in samples/ against GitHub Models, and
+  //   - build and serve the RevealJS presentation with npm.
+  // It does not run demo/ChatApp, which needs Docker and Aspire. See .devcontainer/README.md.
+  "name": "dotnet-ai-building-blocks",
+
+  // GA .NET 10 SDK image (includes git and a non-root vscode user).
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0",
+
+  "features": {
+    // Node for the presentation build and the static server (serve.mjs).
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    // gh is handy for tokens and repo work.
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // serve.mjs serves the built deck on 8000 (npm run preview).
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "Slides", "onAutoForward": "openPreview" }
+  },
+
+  // Install the deck's Node dependencies once, after the container is created.
+  "postCreateCommand": "npm install",
+
+  "containerEnv": {
+    "DOTNET_NOLOGO": "1",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+  },
+
+  // The samples read GITHUB_TOKEN, which needs the models:read permission.
+  //   - Codespaces: add a Codespaces secret named GITHUB_TOKEN (a fine-grained PAT with
+  //     models:read) scoped to this repo. Codespaces injects it for you. The built-in
+  //     Codespaces token does not include models:read, so the secret is what makes it work.
+  //   - Local Dev Containers: export GITHUB_TOKEN on your host, then uncomment the line below
+  //     to forward it in. We keep it commented because localEnv is not available in Codespaces
+  //     and would otherwise overwrite the Codespaces secret with an empty value.
+  // "remoteEnv": { "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}" },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit"
+      ]
+    }
+  }
+}
