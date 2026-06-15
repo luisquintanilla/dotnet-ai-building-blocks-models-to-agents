@@ -1,0 +1,214 @@
+/* =====================================================================
+   Custom slide components for the building-blocks talk.
+   Built on the .NET brand tokens defined in theme.css.
+   ===================================================================== */
+
+/* ---- Title slide ---- */
+.reveal .title-slide h1 {
+  font-size: 2.7em;
+  margin-bottom: 0.1em;
+  line-height: 1.05;
+}
+.reveal .title-slide .subtitle {
+  color: var(--dn-muted);
+  font-size: 1.05em;
+  font-weight: 600;
+}
+.reveal .title-slide .byline {
+  margin-top: 1.2em;
+  color: var(--dn-muted);
+  font-size: 0.7em;
+}
+.reveal .title-rule {
+  height: 6px;
+  width: 320px;
+  margin: 0.6em auto 0.4em;
+  border-radius: 99px;
+  background: var(--dn-gradient);
+}
+
+/* ---- Kicker / eyebrow label ---- */
+.reveal .kicker {
+  display: inline-block;
+  font-family: var(--r-heading-font);
+  font-size: 0.5em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dn-purple-bright);
+  margin-bottom: 0.4em;
+}
+
+/* ---- Interop / standard badges ---- */
+.reveal .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: center;
+  margin: 0.6em 0;
+}
+.reveal .badge {
+  display: inline-block;
+  font-family: var(--r-heading-font);
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.3em 0.8em;
+  border-radius: 99px;
+  border: 1px solid var(--dn-line);
+  color: #e8e3ff;
+  background: rgba(81, 43, 212, 0.18);
+  white-space: nowrap;
+}
+.reveal .badge.open {
+  background: rgba(214, 0, 170, 0.16);
+  border-color: rgba(214, 0, 170, 0.5);
+  color: #ffd6f4;
+}
+.reveal .badge.ext {
+  background: rgba(81, 43, 212, 0.22);
+  border-color: rgba(138, 109, 240, 0.55);
+}
+
+/* ---- Building-block cards ---- */
+.reveal .blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.7em;
+  margin-top: 0.6em;
+}
+.reveal .block-card {
+  text-align: left;
+  background: var(--dn-ink-soft);
+  border: 1px solid var(--dn-line);
+  border-radius: 14px;
+  padding: 0.7em 0.85em;
+  position: relative;
+  overflow: hidden;
+}
+.reveal .block-card .num {
+  font-family: var(--r-heading-font);
+  font-size: 0.6em;
+  color: var(--dn-purple-bright);
+  letter-spacing: 0.05em;
+}
+.reveal .block-card .name {
+  font-family: var(--r-heading-font);
+  font-weight: 700;
+  font-size: 0.8em;
+  margin: 0.1em 0 0.15em;
+}
+.reveal .block-card .pkg {
+  font-family: var(--r-code-font);
+  font-size: 0.5em;
+  color: var(--dn-muted);
+}
+/* Active block lit with the signature gradient. */
+.reveal .block-card.active {
+  border-color: transparent;
+  background: var(--dn-ink-soft);
+}
+.reveal .block-card.active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: 14px;
+  background: var(--dn-gradient);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.reveal .block-card.active .name {
+  color: #fff;
+}
+
+/* ---- Two-column layout (concept + code) ---- */
+.reveal .cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+  align-items: center;
+}
+.reveal .cols.narrow-left {
+  grid-template-columns: 0.8fr 1.2fr;
+}
+.reveal .cols > div {
+  min-width: 0;
+}
+.reveal .col-left {
+  text-align: left;
+}
+
+/* ---- Lead statement / big idea ---- */
+.reveal .lead {
+  font-family: var(--r-heading-font);
+  font-weight: 700;
+  font-size: 1.5em;
+  line-height: 1.15;
+}
+
+/* ---- Pattern callout strip ("familiar .NET pattern") ---- */
+.reveal .repeat-beat {
+  display: inline-block;
+  margin-top: 0.6em;
+  padding: 0.4em 0.9em;
+  border-radius: 10px;
+  background: rgba(81, 43, 212, 0.16);
+  border: 1px dashed rgba(138, 109, 240, 0.5);
+  font-size: 0.6em;
+  color: #e8e3ff;
+}
+
+/* ---- Diagram container ---- */
+.reveal .diagram {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reveal .diagram img,
+.reveal .diagram svg {
+  max-height: 560px;
+  width: auto;
+}
+.reveal section img {
+  border: none;
+  background: none;
+  box-shadow: none;
+  margin: 0;
+}
+
+/* ---- Footer note ---- */
+.reveal .foot {
+  position: absolute;
+  bottom: -0.2em;
+  left: 0;
+  right: 0;
+  font-size: 0.45em;
+  color: var(--dn-muted);
+  font-family: var(--r-code-font);
+}
+
+/* ---- Muted helper text ---- */
+.reveal .muted {
+  color: var(--dn-muted);
+}
+.reveal .small {
+  font-size: 0.7em;
+}
+
+/* ---- Run line (terminal-style command) ---- */
+.reveal .run {
+  display: inline-block;
+  font-family: var(--r-code-font);
+  font-size: 0.6em;
+  background: var(--dn-code-bg);
+  border: 1px solid var(--dn-line);
+  border-radius: 8px;
+  padding: 0.4em 0.8em;
+  color: #c9f0c9;
+}
+.reveal .run::before {
+  content: "› ";
+  color: var(--dn-magenta);
+}

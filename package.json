@@ -1,0 +1,25 @@
+{
+  "name": "dotnet-ai-building-blocks-models-to-agents",
+  "version": "1.0.0",
+  "description": "From Models to Agents: The Essential Building Blocks of AI Apps. A RevealJS talk plus runnable .NET 10 file-based samples.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node build.mjs && node serve.mjs",
+    "serve": "node serve.mjs",
+    "clean": "node -e \"import('node:fs').then(fs=>fs.rmSync('public',{recursive:true,force:true}))\""
+  },
+  "keywords": [
+    "dotnet",
+    "ai",
+    "building-blocks",
+    "microsoft-extensions-ai",
+    "agent-framework",
+    "revealjs"
+  ],
+  "author": "Luis Quintanilla",
+  "license": "MIT",
+  "dependencies": {
+    "reveal.js": "^5.1.0"
+  }
+}
