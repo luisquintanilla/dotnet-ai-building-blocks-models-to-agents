@@ -215,3 +215,17 @@
   content: "› ";
   color: var(--dn-magenta);
 }
+
+/* ---- Primer cue (the optional "drop down" detour hint) ---- */
+.reveal .primer-cue {
+  display: inline-block;
+  margin-top: 0.7em;
+  font-size: 0.55em;
+  color: var(--dn-purple-bright);
+  font-style: italic;
+}
+.reveal .primer-cue::before {
+  content: "↓ ";
+  font-style: normal;
+  color: var(--dn-magenta);
+}

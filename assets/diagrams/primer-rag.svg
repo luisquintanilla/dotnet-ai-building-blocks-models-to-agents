@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 460" width="1120" height="460" role="img" aria-label="RAG is a three-step flow: a question goes to Retrieve, then Augment, then Generate, producing a grounded answer.">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#512bd4"/><stop offset="1" stop-color="#d600aa"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="460" fill="#1b1b1f"/>
+  <g font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
+    <rect x="36" y="206" width="150" height="60" rx="12" fill="#232328" stroke="#3a3a42"/>
+    <text x="111" y="242" text-anchor="middle" fill="#e7e7ee" font-size="15" font-weight="700">question</text>
+
+    <rect x="230" y="150" width="185" height="172" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="252" y="196" fill="#a78bfa" font-size="30" font-weight="800">R</text>
+    <text x="296" y="196" fill="#ffffff" font-size="20" font-weight="700">etrieve</text>
+    <text x="252" y="244" fill="#b4b4be" font-size="13" font-weight="600">find the closest</text>
+    <text x="252" y="266" fill="#b4b4be" font-size="13" font-weight="600">facts in the store</text>
+
+    <rect x="450" y="150" width="185" height="172" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="472" y="196" fill="#a78bfa" font-size="30" font-weight="800">A</text>
+    <text x="500" y="196" fill="#ffffff" font-size="20" font-weight="700">ugment</text>
+    <text x="472" y="244" fill="#b4b4be" font-size="13" font-weight="600">add those facts</text>
+    <text x="472" y="266" fill="#b4b4be" font-size="13" font-weight="600">to the prompt</text>
+
+    <rect x="670" y="150" width="185" height="172" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="692" y="196" fill="#a78bfa" font-size="30" font-weight="800">G</text>
+    <text x="722" y="196" fill="#ffffff" font-size="20" font-weight="700">enerate</text>
+    <text x="692" y="244" fill="#b4b4be" font-size="13" font-weight="600">model answers</text>
+    <text x="692" y="266" fill="#b4b4be" font-size="13" font-weight="600">from the facts</text>
+
+    <rect x="890" y="206" width="180" height="60" rx="12" fill="#241a3a" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="980" y="242" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">grounded answer</text>
+
+    <line x1="188" y1="236" x2="228" y2="236" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="417" y1="236" x2="448" y2="236" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="637" y1="236" x2="668" y2="236" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="857" y1="236" x2="888" y2="236" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <text x="560" y="416" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">RAG = Retrieve, Augment, Generate. The model answers from your data, not its memory.</text>
+  </g>
+</svg>

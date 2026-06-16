@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 460" width="1120" height="460" role="img" aria-label="The model asks your app to call DaysUntil(12, 25); your C# method runs and returns 20 to the model. You stay in control.">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#512bd4"/><stop offset="1" stop-color="#d600aa"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="460" fill="#1b1b1f"/>
+  <g font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
+    <rect x="110" y="150" width="300" height="170" rx="16" fill="#1d1d22" stroke="#512bd4" stroke-width="1.5"/>
+    <text x="260" y="216" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Model</text>
+    <text x="260" y="252" text-anchor="middle" fill="#b4b4be" font-size="14" font-weight="600">reasons about text</text>
+    <text x="260" y="276" text-anchor="middle" fill="#b4b4be" font-size="14" font-weight="600">but can't run code</text>
+
+    <rect x="710" y="150" width="300" height="170" rx="16" fill="#241a3a" stroke="url(#grad)" stroke-width="2"/>
+    <text x="860" y="210" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Your C# method</text>
+    <text x="860" y="250" text-anchor="middle" fill="#a78bfa" font-size="15" font-weight="700" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">int DaysUntil(int m, int d)</text>
+    <text x="860" y="282" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">plain code you wrote</text>
+
+    <text x="560" y="186" text-anchor="middle" fill="#b4b4be" font-size="15" font-weight="700">asks: call DaysUntil(12, 25)</text>
+    <line x1="410" y1="205" x2="708" y2="205" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <line x1="710" y1="272" x2="412" y2="272" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="560" y="300" text-anchor="middle" fill="#b4b4be" font-size="15" font-weight="700">returns: 20</text>
+
+    <text x="560" y="404" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">The model only asks. Your app runs the method and hands back the result. You stay in control.</text>
+  </g>
+</svg>

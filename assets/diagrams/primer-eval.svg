@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 460" width="1120" height="460" role="img" aria-label="An answer plus criteria go to a judge model (an IChatClient), which returns scores for relevance, coherence, and groundedness, plus its reasoning.">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#512bd4"/><stop offset="1" stop-color="#d600aa"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="460" fill="#1b1b1f"/>
+  <g font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
+    <rect x="60" y="138" width="320" height="60" rx="12" fill="#232328" stroke="#3a3a42"/>
+    <text x="84" y="174" fill="#e7e7ee" font-size="15" font-weight="700">the answer</text>
+
+    <rect x="60" y="222" width="320" height="116" rx="12" fill="#232328" stroke="#3a3a42"/>
+    <text x="84" y="252" fill="#a78bfa" font-size="14" font-weight="700">criteria</text>
+    <text x="84" y="278" fill="#b4b4be" font-size="13" font-weight="600">relevance · coherence</text>
+    <text x="84" y="300" fill="#b4b4be" font-size="13" font-weight="600">groundedness</text>
+    <text x="84" y="324" fill="#8f8f99" font-size="12" font-weight="600">(plus the source of truth)</text>
+
+    <rect x="470" y="158" width="210" height="170" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="575" y="234" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Judge model</text>
+    <text x="575" y="266" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">an IChatClient</text>
+
+    <rect x="770" y="138" width="290" height="210" rx="16" fill="#241a3a" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="794" y="178" fill="#b4b4be" font-size="15" font-weight="600">Relevance</text>
+    <text x="1036" y="178" text-anchor="end" fill="#ffffff" font-size="17" font-weight="700">5 / 5</text>
+    <text x="794" y="216" fill="#b4b4be" font-size="15" font-weight="600">Coherence</text>
+    <text x="1036" y="216" text-anchor="end" fill="#ffffff" font-size="17" font-weight="700">5 / 5</text>
+    <text x="794" y="254" fill="#b4b4be" font-size="15" font-weight="600">Groundedness</text>
+    <text x="1036" y="254" text-anchor="end" fill="#ffffff" font-size="17" font-weight="700">4 / 5</text>
+    <text x="794" y="312" fill="#8f8f99" font-size="13" font-weight="600">+ the judge's reasoning</text>
+
+    <line x1="380" y1="168" x2="468" y2="210" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="380" y1="278" x2="468" y2="262" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <line x1="680" y1="240" x2="768" y2="240" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+    <text x="560" y="416" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">An evaluator is a model grading a model, scored on criteria with its reasoning. Drop it in CI.</text>
+  </g>
+</svg>

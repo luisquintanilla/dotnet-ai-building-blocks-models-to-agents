@@ -88,6 +88,43 @@ And every block gets a tiny runnable sample. Single C# file, dotnet run, real ou
 
 ---
 
+<span class="kicker">The .NET team's role</span>
+
+## We build the seams. You build the app.
+
+<div class="cols">
+<div class="col-left">
+
+**What we ship**
+
+- The open abstractions: `IChatClient`, `IEmbeddingGenerator`, `Microsoft.Extensions.VectorData`
+- The open standards: MCP and OpenTelemetry
+- Providers and stores plug in behind them: OpenAI, Azure, Ollama, Qdrant, and more
+
+<p class="muted small">The same playbook as `ILogger`, EF Core providers, and ASP.NET Core middleware: the platform defines the contract, the ecosystem fills it.</p>
+
+</div>
+<div class="col-left">
+
+**What you get**
+
+- No lock-in: swap the model, provider, or store without a rewrite
+- Your .NET skills carry over: DI, the builder, middleware, Aspire
+- Best-of-breed pieces behind one interface
+- Open standards, not a silo
+
+</div>
+</div>
+
+<p class="lead">We steward the platform and enable the ecosystem, so your code keeps working as the AI space moves.</p>
+
+Note:
+Before we stack a single block, one slide on the why, and on our job on the .NET team. Our role is to ship the seams: the interfaces and the standards. IChatClient, IEmbeddingGenerator, the vector data abstraction, MCP. We don't ship the only model or the only store. We ship the contract, and the ecosystem plugs in behind it, OpenAI, Azure, Ollama, Qdrant, and the rest.
+If that sounds familiar, it's exactly what we did with ILogger, with configuration, with EF Core providers, with ASP.NET Core middleware. The platform defines the seam, the ecosystem fills it.
+And here's what that gives you. No lock-in: you swap the model, the provider, or the store without a rewrite. Your .NET skills carry straight over. You get best-of-breed pieces behind one interface, built on open standards, not a silo. Our job is to steward the platform and enable the ecosystem, so the code you write today keeps working as this space keeps moving. That's the promise behind every block we're about to build.
+
+---
+
 <span class="kicker">Block 1 · Models</span>
 
 ## One interface for every provider
@@ -110,14 +147,14 @@ And every block gets a tiny runnable sample. Single C# file, dotnet run, real ou
 ```csharp
 OpenAIClient provider = new(
     new ApiKeyCredential(token),
-    new() { Endpoint = new Uri(githubModels) });
+    new() { Endpoint = new Uri("https://models.inference.ai.azure.com") });
 
 IChatClient chat = provider
     .GetChatClient("gpt-4o-mini")
     .AsIChatClient();
 
 ChatResponse response =
-    await chat.GetResponseAsync("What is .NET?");
+    await chat.GetResponseAsync("In one sentence, what is .NET?");
 ```
 
 </div>
@@ -198,6 +235,8 @@ One block lit. Models. Hold this picture in your head, because we're going to ad
 
 <span class="run">dotnet run 04-embeddings.cs</span>
 
+<p class="primer-cue">New to embeddings? Take the 20-second detour.</p>
+
 </div>
 <div class="col-left">
 
@@ -225,6 +264,19 @@ Closer meaning, higher score. That one idea is what powers search and RAG, which
 
 --
 
+<span class="kicker">Block 2 · In plain terms</span>
+
+## What's an embedding?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-embedding.svg" alt="Three phrases are embedded into vectors; cosine similarity shows the two .NET phrases are close at 0.62 and the cat phrase is far at 0.07." />
+</div>
+
+Note:
+Quick detour for anyone new to this. An embedding turns text into a list of numbers, a vector. Similar meanings get similar numbers, so '.NET apps' and '.NET platform' land close, and 'cat sleeps' lands far from both. Cosine similarity is just how close two vectors are, from zero to one, and the helper ships in .NET. That's the whole idea. Now back to the code.
+
+--
+
 <span class="kicker">Block 2 · RAG</span>
 
 ## Retrieve, augment, generate
@@ -241,15 +293,18 @@ Closer meaning, higher score. That one idea is what powers search and RAG, which
 
 <span class="run">dotnet run 05-rag.cs</span>
 
+<p class="primer-cue">New to RAG? Take the 20-second detour.</p>
+
 </div>
 <div class="col-left">
 
 ```csharp
 await foreach (VectorSearchResult<Doc> hit in
-    docs.SearchAsync(queryVector, top: 2))
+    docs.SearchAsync(queryVector.Vector, top: 2))
 {
     retrieved.Add(hit.Record.Text);
 }
+string context = string.Join("\n", retrieved);
 
 ChatResponse answer = await chat.GetResponseAsync(
     $"Answer using only these facts:\n{context}\n\n" +
@@ -265,6 +320,19 @@ Note:
 Now use those vectors. RAG is three steps: retrieve the closest text, augment the prompt with it, generate the answer.
 The storage sits behind Microsoft.Extensions.VectorData. In the sample it's the in-memory store. To move to Qdrant, Azure AI Search, Redis, or SQLite, you change the store and the rest of this code stays put. Same story as switching an EF Core provider.
 This is exactly how the chat template grounds its answers, and we'll see that later.
+
+--
+
+<span class="kicker">Block 2 · In plain terms</span>
+
+## What's RAG?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-rag.svg" alt="RAG is a three-step flow: a question goes to Retrieve, then Augment, then Generate, producing a grounded answer." />
+</div>
+
+Note:
+If RAG is a new term, here's the whole idea in one picture. The model doesn't know your data, so you do three things. Retrieve the closest facts from your store. Augment the prompt by pasting those facts in. Generate the answer from them. Retrieve, augment, generate, that's the name. The answer is grounded in your data instead of the model's memory. Now the code.
 
 --
 
@@ -287,6 +355,8 @@ Two blocks lit. Models, plus data and memory. The picture is filling in.
 `AIFunctionFactory` wraps a normal C# method as a tool. `UseFunctionInvocation` runs it when the model asks, then feeds the result back.
 
 <span class="run">dotnet run 06-tools.cs</span>
+
+<p class="primer-cue">New to function calling? Take the 20-second detour.</p>
 
 </div>
 <div class="col-left">
@@ -317,6 +387,19 @@ And look how tools turn on: AsBuilder, UseFunctionInvocation, Build. That's the 
 
 --
 
+<span class="kicker">Block 3 · In plain terms</span>
+
+## Does the model run your code?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-tools.svg" alt="The model asks your app to call DaysUntil(12, 25); your C# method runs and returns 20 to the model. You stay in control." />
+</div>
+
+Note:
+One thing that trips people up: the model never runs your code. Here's what actually happens. The model reads your tools and decides it needs one, so it asks, call DaysUntil with twelve and twenty-five. Your app runs the method and hands back the result, twenty. The model takes that and writes the answer. You wrote the method, you stayed in control, the model just asked. Now the code.
+
+--
+
 <span class="kicker">Block 3 · MCP</span>
 
 ## One open standard for every tool
@@ -332,6 +415,8 @@ Model Context Protocol is "HTTP for tools." A server exposes tools once, any cli
 </div>
 
 <span class="run">dotnet run 07-mcp.cs</span>
+
+<p class="primer-cue">New to MCP? Take the 20-second detour.</p>
 
 </div>
 <div class="col-left">
@@ -359,6 +444,19 @@ Note:
 Writing a tool for every system doesn't scale. MCP is the open standard that fixes that. Think of it as HTTP for tools. A server publishes its tools once, and any MCP client can use them.
 Here we connect to the public Microsoft Learn server, list its tools, and the model searches the docs for us.
 And the payoff is the interop. An MCP tool is just an AIFunction. It drops straight into the same Tools list from the previous slide. No new concept. .NET can consume MCP tools and serve them too.
+
+--
+
+<span class="kicker">Block 3 · In plain terms</span>
+
+## What's MCP?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-mcp.svg" alt="An MCP server (Microsoft Learn) exposes its tools once, and any client can use them." />
+</div>
+
+Note:
+If MCP is new to you, think of it like HTTP, but for tools. A server exposes its tools once, here the public Microsoft Learn server with its docs search and fetch. Then any client that speaks MCP can use them, your app, someone else's app, any of them. You don't rewrite a tool for every system, you point at the server. And the payoff: each tool arrives as just an AIFunction, the same thing from the tools slide. Now the code.
 
 --
 
@@ -432,6 +530,8 @@ This block isn't in the template. You add it in your **test project and CI**.
 
 <span class="run">dotnet run 09-eval.cs</span>
 
+<p class="primer-cue">A model grading a model? Take the 20-second detour.</p>
+
 </div>
 <div class="col-left">
 
@@ -458,6 +558,19 @@ Note:
 Block five, evaluations. This is the quality gate, and it's the one people skip until it bites them.
 You score the response. Relevance, coherence, groundedness, and more. The evaluators use an IChatClient as the judge, so it's the same foundation again, one more block.
 Here's the important framing: evaluations is not in the chat template. It's the block you wrap around the app. Run it online, scoring to telemetry, or offline in MSTest or xUnit in CI, with caching and reporting. Score every change so quality never quietly regresses.
+
+--
+
+<span class="kicker">Block 5 · In plain terms</span>
+
+## A model grading a model?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-eval.svg" alt="An answer plus criteria go to a judge model, which returns scores for relevance, coherence, and groundedness, plus its reasoning." />
+</div>
+
+Note:
+This one sounds strange the first time: a model grading a model. Here's how it works. You give a judge model the answer plus your criteria, relevance, coherence, groundedness, and for groundedness the source of truth. The judge scores each one and tells you why. Then you automate it, run it in CI, and score every change so quality never quietly slips. Now the code.
 
 --
 
@@ -675,6 +788,7 @@ Note:
 Let's bring it home. Six blocks. Models, data and memory, tools and MCP, middleware, evaluations, agents.
 Every one is built the .NET way. Every one uses the DI, builder, and middleware patterns you already know. Every one sits on the same IChatClient foundation and on open standards. So moving from a single model call all the way to a multi-agent workflow was adding blocks, never starting over.
 Building blocks for the AI age, and they're already part of .NET. You learn it once and use it everywhere.
+And that's the deal we make with you on the .NET team. We ship the building blocks and keep them open. You build on them. Your skills and your code carry forward as the AI space keeps moving.
 
 ---
 
