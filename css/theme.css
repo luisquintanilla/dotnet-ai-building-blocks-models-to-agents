@@ -38,7 +38,7 @@
 /* ---- Design tokens ---- */
 :root {
   --dn-purple: #512bd4;
-  --dn-purple-bright: #8a6df0;
+  --dn-purple-bright: #a78bfa;
   --dn-magenta: #d600aa;
   --dn-gradient: linear-gradient(120deg, #512bd4, #d600aa);
   --dn-gradient-soft: linear-gradient(120deg, #6f4be0, #d600aa);
@@ -84,6 +84,21 @@
   font-weight: 400;
 }
 
+/* Apply the brand colors directly. We don't load an upstream reveal.js theme,
+   so the --r-* variables above need to be consumed here or text falls back to
+   the browser default (black), which is invisible on the dark background. */
+.reveal {
+  color: var(--r-main-color);
+}
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  color: var(--r-heading-color);
+}
+
 /* ---- Light option ---- */
 .reveal.light {
   --r-background-color: #ffffff;
@@ -107,24 +122,43 @@
   letter-spacing: -0.01em;
 }
 
-/* Gradient text helper used for the signature look. */
+/* Gradient text helper used for the signature look. A solid fallback color is
+   declared first so the text is never invisible when background-clip:text is
+   unsupported or disabled (e.g. forced-colors / high-contrast mode). */
 .reveal .gradient,
 .reveal h1 .grad,
 .reveal h2 .grad {
-  background: var(--dn-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--dn-purple-bright);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .reveal .gradient,
+  .reveal h1 .grad,
+  .reveal h2 .grad {
+    background: var(--dn-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+@media (forced-colors: active) {
+  .reveal .gradient,
+  .reveal h1 .grad,
+  .reveal h2 .grad {
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+  }
 }
 
 /* ---- Links ---- */
 .reveal a {
+  color: var(--r-link-color);
   text-decoration: none;
   border-bottom: 1px solid rgba(138, 109, 240, 0.4);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .reveal a:hover {
+  color: var(--r-link-color-hover);
   border-bottom-color: var(--dn-magenta);
 }
 
@@ -154,6 +188,14 @@
   padding: 0.1em 0.4em;
   border-radius: 6px;
   font-size: 0.92em;
+}
+
+/* Lift the Monokai comment/meta tokens to meet WCAG AA on the code background
+   (the stock #75715e is only ~3.7:1). Keeps a muted look at ~5.2:1. */
+.reveal .hljs-comment,
+.reveal .hljs-quote,
+.reveal .hljs-meta {
+  color: #8b8778;
 }
 
 /* ---- Lists ---- */
