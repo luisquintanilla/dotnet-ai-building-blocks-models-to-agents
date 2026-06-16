@@ -79,7 +79,8 @@ Buffer plan: if running long, drop the image-generation walk in Block 1 to talki
 - **Key framing:** evaluations is NOT in the template. You wrap it around the app, in your test project / CI (offline MSTest/xUnit with caching + reporting) or online to telemetry.
 - **Demo:** run 09, show the three metric scores + the judge's rating.
 
-## 9. Block 6 — Agents (6 min) — *samples: 10-agent.cs, 11-multi-agent.cs · diagram: stack-6*
+## 9. Block 6 — Agents (6 min) — *samples: 10-agent.cs, 11-multi-agent.cs · diagrams: agent-encapsulation, stack-6*
+- **What is an agent (open here):** a chatbot answers and you orchestrate every step; an agent has autonomy. It reasons, picks a tool, calls it, checks the result, and decides what's next, on its own. An agent is not a seventh block. It is the blocks you already built (model, data and memory, tools, middleware) wrapped behind one boundary, with the loop on top, on the same .NET foundation. *(diagram: agent-encapsulation)*
 - The graduated moment. You already have an IChatClient and tools. Wrap them: `new ChatClientAgent(...)`. That's Microsoft Agent Framework. One line, no rewrite.
 - A session carries the conversation, so the agent remembers across turns.
 - Multi-agent: compose agents like middleware. Concurrent workflow = fan out to specialists, fan in results. `workflow.AsAIAgent(...)` runs through the same interface.

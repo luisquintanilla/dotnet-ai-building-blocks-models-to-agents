@@ -472,12 +472,27 @@ Five blocks. We've got a grounded, observable, tested app. There's one block lef
 
 <span class="kicker">Block 6 · Agents</span>
 
+## An agent is the blocks, wrapped
+
+<div class="diagram">
+<img src="assets/diagrams/agent-encapsulation.svg" alt="An Agent container that wraps Model (IChatClient), Tools (AIFunctionFactory), Memory (AIContextProvider), and Instructions, runs a reason, act, observe loop, keeps a session, and rests on the same .NET foundation." />
+</div>
+
+Note:
+So, what is an agent? A chatbot takes your input, calls the model, and hands back the output. You orchestrate every step. An agent has autonomy. It reasons about the task, picks a tool, calls it, looks at the result, and decides what to do next, on its own.
+Here is the part that matters for this talk. An agent is not a new thing to learn. It is the blocks you already built. The model is the IChatClient from block one. The tools are the AIFunctionFactory functions from block three. Memory is an AIContextProvider, and it can pull from the same vector store you saw in block two. Instructions are the agent's standing job, and middleware still wraps the calls underneath. The agent draws a boundary around all of it and adds the loop.
+And it sits on the same .NET foundation: dependency injection, the builder, configuration. So when we wrap an IChatClient as an agent on the next slide, there is no new mental model. It is encapsulation, not a rewrite.
+
+--
+
+<span class="kicker">Block 6 · Agents</span>
+
 ## From blocks to agents, one line
 
 <div class="cols">
 <div class="col-left">
 
-You already have an `IChatClient` and tools. Wrap them as a `ChatClientAgent`. That's Microsoft Agent Framework. No rewrite.
+You just saw what an agent wraps. Here it is in code. You already have an `IChatClient` and tools, so wrap them as a `ChatClientAgent`. That's Microsoft Agent Framework. No rewrite.
 
 <div class="badges">
 <span class="badge ext">Microsoft.Agents.AI</span>
@@ -507,8 +522,8 @@ AgentSession session = await agent.CreateSessionAsync();
 </div>
 
 Note:
-Block six. Agents. This is the graduated moment the whole talk has been building toward.
-At some point you want the model to hold its own instructions, keep a conversation, and use tools on its own. That's an agent. And here's the punchline: you already have an IChatClient and tools, so you just wrap them. One line. new ChatClientAgent. That's Microsoft Agent Framework.
+We just defined the agent. Now here it is in one line of code, the graduated moment the whole talk has been building toward.
+You already have an IChatClient and tools, so you just wrap them. One line. new ChatClientAgent. That's Microsoft Agent Framework.
 No new mental model, no rewrite. A session carries the conversation so it remembers across turns. This is why we spent the whole talk on the foundation. Moving to agents is a wrap, not a rebuild.
 
 --
