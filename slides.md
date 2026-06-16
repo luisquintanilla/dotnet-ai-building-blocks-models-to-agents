@@ -773,11 +773,12 @@ The template is just the blocks, assembled. And evaluations plugs in right here,
 
 <span class="run">aspire run</span>
 
-<p class="muted small">Pick your provider: GitHub Models, Azure OpenAI, OpenAI, or Ollama. Same building blocks underneath.</p>
+<p class="muted small">Pick your provider: GitHub Models, Azure OpenAI, OpenAI, or Ollama. Same code, same model, just a different endpoint.</p>
 
 Note:
 You don't have to take my word for it. Install the templates, scaffold an aichat app, run it. Two minutes.
 On the way out it asks which provider you want. GitHub Models to start for free, Azure OpenAI for production, OpenAI, or Ollama to run local. Doesn't matter, because underneath it's the same building blocks we just walked through, and the same IChatClient seam lets you switch later.
+To make that concrete: every sample today ran gpt-4.1-mini on GitHub Models, for free. The production app I'm about to show runs that same gpt-4.1-mini on Azure OpenAI. Same code, same model, just a different endpoint. That's the interoperability promise you can actually see.
 
 ---
 

@@ -92,6 +92,10 @@ IChatClient chat = provider.GetChatClient("your-deployment-name").AsIChatClient(
 Everything below the client stays the same, because it still sees `IChatClient`. For image
 generation, the same swap applies with `provider.GetImageClient("your-image-deployment")`.
 
+These samples run `gpt-4.1-mini` on GitHub Models, and it's also available on Azure OpenAI.
+Deploy `gpt-4.1-mini` and the only thing that changes is the client construction above. The
+rest of the file is identical. That's the same model on a different provider, by design.
+
 Keyless needs your signed-in identity to have the **Cognitive Services OpenAI User** role on
 the resource. If you would rather use a key, set `AZURE_OPENAI_ENDPOINT` and pass an
 `AzureKeyCredential` instead.
