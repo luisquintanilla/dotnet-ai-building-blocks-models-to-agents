@@ -662,10 +662,10 @@ I'll run the branch on a real PDF so you can see the same questions get better-g
 
 <div class="blocks">
 <div class="block-card active"><div class="num">01</div><div class="name">Models</div><div class="pkg">Extensions.AI</div></div>
-<div class="block-card active"><div class="num">02</div><div class="name">Data &amp; memory</div><div class="pkg">VectorData · DataIngestion</div></div>
-<div class="block-card active"><div class="num">03</div><div class="name">Tools &amp; MCP</div><div class="pkg">AIFunction · MCP</div></div>
-<div class="block-card active"><div class="num">04</div><div class="name">Middleware</div><div class="pkg">pipeline · OTel</div></div>
-<div class="block-card active"><div class="num">05</div><div class="name">Evaluations</div><div class="pkg">AI.Evaluation</div></div>
+<div class="block-card active"><div class="num">02</div><div class="name">Data &amp; memory</div><div class="pkg">Extensions.<wbr>VectorData</div></div>
+<div class="block-card active"><div class="num">03</div><div class="name">Tools &amp; MCP</div><div class="pkg">Model<wbr>Context<wbr>Protocol</div></div>
+<div class="block-card active"><div class="num">04</div><div class="name">Middleware</div><div class="pkg">OpenTelemetry</div></div>
+<div class="block-card active"><div class="num">05</div><div class="name">Evaluations</div><div class="pkg">Extensions.AI.<wbr>Evaluation</div></div>
 <div class="block-card active"><div class="num">06</div><div class="name">Agents</div><div class="pkg">Agents.AI</div></div>
 </div>
 
