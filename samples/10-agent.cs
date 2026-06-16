@@ -23,7 +23,7 @@ string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN")
 IChatClient chat = new OpenAIClient(
         new ApiKeyCredential(token),
         new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 [Description("Returns the number of days until a given month and day this year.")]

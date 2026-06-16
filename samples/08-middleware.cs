@@ -38,7 +38,7 @@ IDistributedCache cache = new MemoryDistributedCache(
 IChatClient inner = new OpenAIClient(
         new ApiKeyCredential(token),
         new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 // Outermost first. Read it top to bottom: invoke tools, then cache, then trace,

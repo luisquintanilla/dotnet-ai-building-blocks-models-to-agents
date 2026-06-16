@@ -19,7 +19,7 @@ string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN")
 IChatClient inner = new OpenAIClient(
         new ApiKeyCredential(token),
         new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 // One line turns automatic tool calling on. Same builder pattern as ASP.NET Core.

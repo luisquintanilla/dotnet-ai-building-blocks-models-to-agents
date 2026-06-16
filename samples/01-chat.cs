@@ -19,7 +19,7 @@ OpenAIClient provider = new(
     new ApiKeyCredential(token),
     new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") });
 
-IChatClient chat = provider.GetChatClient("gpt-4o-mini").AsIChatClient();
+IChatClient chat = provider.GetChatClient("gpt-4.1-mini").AsIChatClient();
 
 // One call. Same shape no matter who serves the model.
 ChatResponse response = await chat.GetResponseAsync("In one sentence, what is .NET?");

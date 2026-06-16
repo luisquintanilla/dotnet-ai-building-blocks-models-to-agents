@@ -138,7 +138,7 @@ OpenAIClient provider = new(
     new() { Endpoint = new Uri(endpoint) });
 
 IChatClient chat = provider
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 ChatResponse response =
@@ -153,7 +153,7 @@ ChatResponse response =
 <span class="output-label">Output</span>
 
 ```text
-.NET is a versatile software development framework created by Microsoft that enables developers to build, deploy, and run a wide range of applications across different platforms using multiple programming languages.
+.NET is a free, open-source developer platform created by Microsoft for building a wide range of applications, including web, mobile, desktop, gaming, and IoT, using multiple programming languages.
 ```
 
 </div>
@@ -171,7 +171,7 @@ Note:
 `IChatClient` is the foundation. It talks to GitHub Models, Azure OpenAI, OpenAI, Ollama, or Foundry Local through the same interface.
 Block one, models. The only provider-specific lines are the two that build the client. Everything after sees IChatClient and nothing else.
 Want a different model? Change the string. Different provider? Change those two lines. The rest of your app doesn't move. That's the interop promise, and it's the foundation the other five blocks sit on.
-Run the sample and you'll see the same code answer with gpt-4o-mini and then gpt-4o, no other changes.
+Run the sample and you'll see the same code answer with gpt-4.1-mini and then gpt-4o, no other changes.
 
 --
 
@@ -196,10 +196,12 @@ Need a picture *out*? `IImageGenerator` is the same one-interface pattern.
 <div class="col-left">
 
 ```csharp
+byte[] bytes = await http.GetByteArrayAsync(imageUrl);
+
 ChatMessage msg = new(ChatRole.User,
 [
     new TextContent("What's in this image?"),
-    new UriContent(url, "image/jpeg")
+    new DataContent(bytes, "image/jpeg")
 ]);
 
 ChatResponse seen = await chat.GetResponseAsync([msg]);
@@ -213,7 +215,7 @@ IImageGenerator images = provider
 </div>
 
 Note:
-Quick one, but it matters. The Models block isn't text-only. The same IChatClient takes images. You build a message with a text part and an image part, hand it over, and ask about the picture. gpt-4o-mini does vision, so that runs on GitHub Models.
+Quick one, but it matters. The Models block isn't text-only. The same IChatClient takes images. You build a message with a text part and an image part, hand it over, and ask about the picture. gpt-4.1-mini does vision, so that runs on GitHub Models.
 And it goes the other way too. Need an image generated? That's IImageGenerator, the same one-interface, swap-the-provider pattern. Speech-to-text is ISpeechToTextClient, same idea. Real-time audio you can do today through the provider SDK.
 So when I say "models," I mean text, images, and audio, all through the same kind of seam. One pattern, every modality.
 
@@ -321,7 +323,7 @@ ChatResponse answer = await chat.GetResponseAsync(
 [0.457] Microsoft.Extensions.AI.Evaluation scores response quality using the same IChatClient.
 [0.222] Model Context Protocol, MCP, is an open standard for giving models access to tools.
 
-You can score your model's answers using Microsoft.Extensions.AI.Evaluation, which evaluates response quality using the same IChatClient.
+You can score your model's answers using Microsoft.Extensions.AI.Evaluation, which evaluates response quality by using the same IChatClient that your model uses.
 ```
 
 </div>
@@ -398,7 +400,7 @@ await chat.GetResponseAsync(prompt, options);
 <span class="output-label">Output</span>
 
 ```text
-The current time is Tuesday, June 16, 2026, at 11:46 AM. There are 192 days until December 25th.
+The current time is Tuesday, June 16, 2026, 1:26 PM. There are 192 days until December 25th.
 ```
 
 </div>
@@ -465,7 +467,7 @@ await chat.GetResponseAsync(question,
 ```text
 Discovered tools: microsoft_docs_search, microsoft_code_sample_search, microsoft_docs_fetch
 
-Microsoft.Extensions.AI is a set of core .NET libraries that provides a unified layer of C# abstractions for working with AI services such as chat models, embeddings, and middleware, so developers can integrate generative AI without tying their apps to a single provider.
+Microsoft.Extensions.AI is a set of core .NET libraries that provide a unified layer of C# abstractions for interacting with AI services such as language models, embeddings, and middleware. It enables seamless integration and interoperability with various AI services in the .NET ecosystem, offering a clean abstraction for model interaction that fits naturally into dependency injection, configuration, and existing app architectures.
 ```
 
 </div>
@@ -587,11 +589,11 @@ NumericMetric m = result.Get<NumericMetric>(name);
 <span class="output-label">Output</span>
 
 ```text
-Answer: Microsoft.Extensions.AI utilizes the `IChatInterface` for chat functionalities. This interface is part of the broader set of tools and extensions provided for AI integration within .NET applications, enabling robust chat capabilities.
+Answer: Microsoft.Extensions.AI uses the `IChatClient` interface for chat functionality.
 
 Relevance    : 4.0/5  (Good)
 Coherence    : 4.0/5  (Good)
-Groundedness : 3.0/5  (Average)
+Groundedness : 5.0/5  (Exceptional)
 ```
 
 </div>
@@ -677,9 +679,9 @@ AgentSession session = await agent.CreateSessionAsync();
 <span class="output-label">Output</span>
 
 ```text
-There are 192 days until December 25th! 🎉 Get ready for the festivities!
+There are 192 days until December 25th. It's a great time to start planning your festive .NET event! Need any help with ideas?
 
-Your name is Luis! 😊
+Your name is Luis. How can I assist you with your .NET meetup plans today?
 ```
 
 </div>

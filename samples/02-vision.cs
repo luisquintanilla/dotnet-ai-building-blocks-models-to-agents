@@ -17,13 +17,19 @@ OpenAIClient provider = new(
     new ApiKeyCredential(token),
     new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") });
 
-IChatClient chat = provider.GetChatClient("gpt-4o-mini").AsIChatClient();
+IChatClient chat = provider.GetChatClient("gpt-4.1-mini").AsIChatClient();
 
-Uri imageUri = new("https://upload.wikimedia.org/wikipedia/commons/3/3f/Fronalpstock_big.jpg");
+// We download the image and pass the bytes inline. Passing a URL would make the
+// model service fetch it, which isn't always allowed; bytes always work.
+using HttpClient http = new();
+http.DefaultRequestHeaders.UserAgent.ParseAdd("dotnet-ai-building-blocks-sample/1.0 (https://github.com/luisquintanilla)");
+Uri imageUri = new("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fronalpstock_big.jpg/500px-Fronalpstock_big.jpg");
+byte[] imageBytes = await http.GetByteArrayAsync(imageUri);
+
 ChatMessage message = new(ChatRole.User,
 [
     new TextContent("What is in this image? Answer in one sentence."),
-    new UriContent(imageUri, "image/jpeg")
+    new DataContent(imageBytes, "image/jpeg")
 ]);
 
 ChatResponse response = await chat.GetResponseAsync([message]);

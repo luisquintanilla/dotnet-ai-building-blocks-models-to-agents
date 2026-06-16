@@ -22,7 +22,7 @@ string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN")
 IChatClient chat = new OpenAIClient(
         new ApiKeyCredential(token),
         new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 // Three agents, three viewpoints. Each is a ChatClientAgent from Block 6.

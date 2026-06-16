@@ -57,9 +57,15 @@ later runs are quick.
   or Foundry Local instead, change the few provider lines at the top. The rest of
   each sample only ever sees an abstraction like `IChatClient`, `IImageGenerator`,
   or `IEmbeddingGenerator`, so it keeps working.
-- `02-vision.cs` runs on GitHub Models because `gpt-4o-mini` is vision-capable.
-  `03-image-generation.cs` needs an image-capable endpoint, such as OpenAI or
-  Azure OpenAI. Swap the provider lines, and keep the `IImageGenerator` code.
+- `02-vision.cs` runs on GitHub Models because `gpt-4.1-mini` is vision-capable.
+  It downloads the image and passes the bytes inline, so the model service never
+  has to fetch a URL. `03-image-generation.cs` needs an image-capable endpoint,
+  such as OpenAI or Azure OpenAI. Swap the provider lines, and keep the
+  `IImageGenerator` code.
+- `07-mcp.cs` connects to the live Microsoft Learn MCP server. Its doc results can
+  be larger than the free GitHub Models input limit (8000 tokens), so the sample
+  adds a small `DelegatingChatClient` that trims each tool result before it goes
+  back to the model. In production you would summarize or page instead.
 - `05-rag.cs` uses the in-memory vector store. The store ships in a connector
   package; your code targets the `Microsoft.Extensions.VectorData` abstraction,
   so swapping to SQLite, Qdrant, Azure AI Search, or Redis is a connector change,

@@ -34,19 +34,50 @@ Console.WriteLine();
 IChatClient chat = new OpenAIClient(
                 new ApiKeyCredential(token),
                 new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-            .GetChatClient("gpt-4o-mini")
+            .GetChatClient("gpt-4.1-mini")
             .AsIChatClient()
     .AsBuilder()
     .UseFunctionInvocation()
+    // Free GitHub Models caps the request at 8000 tokens. Live doc results can be
+    // larger, so we trim each tool result before it goes back to the model. In
+    // production you'd summarize or page instead. This is just middleware.
+    .Use(inner => new TrimToolResults(inner, maxChars: 6000))
     .Build();
 
-// The MCP tools spread directly into the Tools list. The model searches Learn,
-// reads the results, and answers grounded in the docs.
+// The MCP tools spread directly into the Tools list, exactly like the plain C#
+// tools in 06-tools.cs. The model searches Learn, reads the results, and answers
+// grounded in the docs.
 ChatResponse response = await chat.GetResponseAsync(
-    "Using the Microsoft Learn docs, what is Microsoft.Extensions.AI in one paragraph?",
+    "Using the Microsoft Learn docs, what is Microsoft.Extensions.AI? Answer in two sentences.",
     new ChatOptions { Tools = [.. tools] });
 
 Console.WriteLine(response.Text);
 Console.WriteLine();
 Console.WriteLine("One open standard, every tool. That's MCP.");
+
+// A few lines of middleware that keep large tool results inside the model's
+// context window. DelegatingChatClient is the same pattern as 08-middleware.cs.
+sealed class TrimToolResults(IChatClient inner, int maxChars) : DelegatingChatClient(inner)
+{
+    public override Task<ChatResponse> GetResponseAsync(
+        IEnumerable<ChatMessage> messages,
+        ChatOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        foreach (ChatMessage message in messages)
+        {
+            foreach (AIContent content in message.Contents)
+            {
+                if (content is FunctionResultContent result)
+                {
+                    string text = result.Result as string ?? result.Result?.ToString() ?? string.Empty;
+                    if (text.Length > maxChars)
+                        result.Result = text[..maxChars];
+                }
+            }
+        }
+
+        return base.GetResponseAsync(messages, options, cancellationToken);
+    }
+}
 

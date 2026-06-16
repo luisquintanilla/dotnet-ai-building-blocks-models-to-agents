@@ -22,7 +22,7 @@ string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN")
 IChatClient chat = new OpenAIClient(
         new ApiKeyCredential(token),
         new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") })
-    .GetChatClient("gpt-4o-mini")
+    .GetChatClient("gpt-4.1-mini")
     .AsIChatClient();
 
 // 1. Get the response we want to grade.
@@ -37,7 +37,7 @@ Console.WriteLine($"Answer: {modelResponse.Text}");
 Console.WriteLine();
 
 // 2. Pick the judge. The evaluators call this IChatClient to score. A stronger
-//    model makes a better judge; gpt-4o-mini keeps this sample simple.
+//    model makes a better judge; gpt-4.1-mini keeps this sample simple.
 ChatConfiguration judge = new(chat);
 
 // 3. Compose the evaluators you care about. They run together.

@@ -23,7 +23,7 @@ OpenAIClient provider = new(
     new ApiKeyCredential(token),
     new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") });
 
-IChatClient chat = provider.GetChatClient("gpt-4o-mini").AsIChatClient();
+IChatClient chat = provider.GetChatClient("gpt-4.1-mini").AsIChatClient();
 IEmbeddingGenerator<string, Embedding<float>> embedder =
     provider.GetEmbeddingClient("text-embedding-3-small").AsIEmbeddingGenerator();
 
