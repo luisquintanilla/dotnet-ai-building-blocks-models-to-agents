@@ -1,8 +1,9 @@
 {
   // Dev container for the talk. It gives you everything to:
-  //   - run the .NET 10 file-based samples in samples/ against GitHub Models, and
-  //   - build and serve the RevealJS presentation with npm.
-  // It does not run demo/ChatApp, which needs Docker and Aspire. See .devcontainer/README.md.
+  //   - run the .NET 10 file-based samples in samples/ against GitHub Models,
+  //   - build and serve the RevealJS presentation with npm, and
+  //   - run demo/ChatApp (Aspire), since Docker is available via docker-in-docker.
+  // See .devcontainer/README.md.
   "name": "dotnet-ai-building-blocks",
 
   // GA .NET 10 SDK image (includes git and a non-root vscode user).
@@ -14,7 +15,9 @@
     // gh is handy for tokens and repo work.
     "ghcr.io/devcontainers/features/github-cli:1": {},
     // az lets you sign in and configure Azure OpenAI (see .devcontainer/README.md).
-    "ghcr.io/devcontainers/features/azure-cli:1": {}
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    // Docker so Aspire can run demo/ChatApp and its markitdown container.
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
 
   // serve.mjs serves the built deck on 8000 (npm run preview).
@@ -32,12 +35,11 @@
   },
 
   // The samples read GITHUB_TOKEN, which needs the models:read permission.
-  //   - Codespaces: add a Codespaces secret named GITHUB_TOKEN (a fine-grained PAT with
-  //     models:read) scoped to this repo. Codespaces injects it for you. The built-in
-  //     Codespaces token does not include models:read, so the secret is what makes it work.
-  //   - Local Dev Containers: export GITHUB_TOKEN on your host, then uncomment the line below
-  //     to forward it in. We keep it commented because localEnv is not available in Codespaces
-  //     and would otherwise overwrite the Codespaces secret with an empty value.
+  //   - Codespaces: nothing to do. Codespaces provides GITHUB_TOKEN automatically, and it works
+  //     with GitHub Models out of the box (see the docs link in .devcontainer/README.md).
+  //   - Local Dev Containers: create a PAT with models:read, export GITHUB_TOKEN on your host,
+  //     then uncomment the line below to forward it in. We keep it commented because localEnv is
+  //     not available in Codespaces and an empty value would shadow the provided token.
   // "remoteEnv": { "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}" },
 
   "customizations": {

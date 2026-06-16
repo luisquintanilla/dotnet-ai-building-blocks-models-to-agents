@@ -1,7 +1,8 @@
 # Dev container
 
-Spin this up when you want to run the samples or the presentation without installing
-anything locally. You get the .NET 10 SDK, Node, and the GitHub CLI in one container.
+Spin this up when you want to run the samples, the presentation, or the demo app without
+installing anything locally. You get the .NET 10 SDK, Node, the GitHub CLI, the Azure CLI,
+and Docker in one container.
 
 Open it two ways:
 
@@ -13,31 +14,21 @@ Open it two ways:
 
 - `samples/` — the .NET 10 file-based apps, run against GitHub Models.
 - The RevealJS deck — `npm run preview`, served on port 8000 (auto-forwarded).
-
-It does not cover `demo/ChatApp`. That app uses Aspire and a Docker container for PDF
-conversion, so it needs Docker inside the container. If you want to run it here too, add
-the docker-in-docker feature to `devcontainer.json`:
-
-```jsonc
-"features": {
-  "ghcr.io/devcontainers/features/docker-in-docker:2": {}
-}
-```
-
-Then follow `demo/README.md`.
+- `demo/ChatApp` — the Aspire app. Docker is available through docker-in-docker, so Aspire can
+  pull and run its markitdown container. Follow [`demo/README.md`](../demo/README.md) to run it.
 
 ## Set GITHUB_TOKEN for the samples
 
-The samples read `GITHUB_TOKEN`, and that token needs the `models:read` permission.
+The samples read `GITHUB_TOKEN`. What you need depends on where you run.
 
-**Codespaces.** The built-in Codespaces token does not include `models:read`, so add your own:
+**Codespaces.** Nothing to do. Codespaces provides `GITHUB_TOKEN` for you, and it works with
+GitHub Models out of the box. The GitHub docs confirm this: running in a codespace needs no
+token setup, while running locally needs a personal access token. See
+[Prototyping with AI models](https://docs.github.com/en/github-models/use-github-models/prototyping-with-ai-models).
 
-1. Create a fine-grained personal access token with the **Models** permission set to read.
-   See [GitHub Models](https://github.com/marketplace/models).
-2. Add it as a Codespaces secret named `GITHUB_TOKEN`, scoped to this repository:
-   **Settings → Codespaces → Secrets**. Codespaces injects it on the next rebuild.
-
-**Local Dev Containers.** Export the token on your host before you open the container:
+**Local Dev Containers.** Create a personal access token with the `models:read` permission
+(see [GitHub Models](https://github.com/marketplace/models)), then export it on your host
+before you open the container:
 
 ```bash
 export GITHUB_TOKEN=your_token_here
@@ -49,8 +40,8 @@ Then uncomment this line in `devcontainer.json` so the host value flows in:
 "remoteEnv": { "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}" }
 ```
 
-We keep that line commented by default. `localEnv` is not available in Codespaces, so an
-uncommented forward would overwrite the Codespaces secret with an empty value.
+We keep that line commented by default. `localEnv` is empty in Codespaces, so an uncommented
+forward would shadow the token Codespaces already provides.
 
 Either way, confirm it is set:
 
@@ -113,6 +104,10 @@ dotnet run 01-chat.cs
 
 # Presentation (build + serve on http://localhost:8000)
 npm run preview
+
+# Demo app (Aspire). Docker is available, so this works here too.
+dotnet run --project demo/ChatApp/ChatApp.AppHost
 ```
 
-`npm install` already ran when the container was created, so the deck is ready to build.
+`npm install` already ran when the container was created, so the deck is ready to build. For
+the demo app, set its GitHub Models token first as shown in [`demo/README.md`](../demo/README.md).

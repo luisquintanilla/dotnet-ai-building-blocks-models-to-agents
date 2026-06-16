@@ -26,10 +26,11 @@ as "here's everything together."
 ## Run in a dev container
 
 Want a ready-made environment? This repo ships a [dev container](.devcontainer/devcontainer.json)
-with the .NET 10 SDK, Node, and the GitHub CLI. Open it in a GitHub Codespace or locally with the
-VS Code Dev Containers extension, and you can run the samples and the presentation right away. See
-[`.devcontainer/README.md`](.devcontainer/README.md) for token setup. The container does not run
-`demo/ChatApp` (that needs Docker and Aspire).
+with the .NET 10 SDK, Node, the GitHub CLI, the Azure CLI, and Docker. Open it in a GitHub
+Codespace or locally with the VS Code Dev Containers extension, and you can run the samples, the
+presentation, and the `demo/ChatApp` Aspire app right away. In Codespaces the samples work against
+GitHub Models with no token setup. See [`.devcontainer/README.md`](.devcontainer/README.md) for
+details.
 
 ## Run the deck locally
 
