@@ -65,7 +65,7 @@
 .reveal {
   --r-background-color: var(--dn-ink);
   --r-main-font: "Open Sans", system-ui, -apple-system, Segoe UI, sans-serif;
-  --r-main-font-size: 34px;
+  --r-main-font-size: 28px;
   --r-main-color: #ededf2;
   --r-heading-font: "Space Grotesk", "Open Sans", system-ui, sans-serif;
   --r-heading-color: var(--dn-white);
@@ -84,11 +84,15 @@
   font-weight: 400;
 }
 
-/* Apply the brand colors directly. We don't load an upstream reveal.js theme,
-   so the --r-* variables above need to be consumed here or text falls back to
-   the browser default (black), which is invisible on the dark background. */
+/* Apply the brand colors and typography directly. We don't load an upstream
+   reveal.js theme, so the --r-* variables above need to be consumed here or
+   text falls back to the browser defaults (black Times New Roman at 16px),
+   which is both invisible on the dark background and far too small. */
 .reveal {
   color: var(--r-main-color);
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  line-height: 1.4;
 }
 .reveal h1,
 .reveal h2,
@@ -119,6 +123,7 @@
 .reveal h4 {
   font-family: var(--r-heading-font);
   font-weight: 700;
+  line-height: var(--r-heading-line-height);
   letter-spacing: -0.01em;
 }
 
