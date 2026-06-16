@@ -9,8 +9,8 @@
     <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#8a4bff" flood-opacity="0.40"/>
     </filter>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#d600aa"/>
+    <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
     </marker>
   </defs>
   <rect width="1120" height="580" fill="#1b1b1f"/>
