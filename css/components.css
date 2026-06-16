@@ -257,6 +257,64 @@
   max-height: 460px;
 }
 
+/* ---- Paired code + output cards (matched chrome + height) ---- */
+.reveal .cols.code-output {
+  align-items: stretch;
+}
+.reveal .cols.code-output > .col-left {
+  display: flex;
+  flex-direction: column;
+}
+/* code card: drop the float shadow, add a purple left-accent so it mirrors the
+   magenta OUTPUT card, and fill the column height so both cards line up. */
+.reveal .cols.code-output > .col-left > pre {
+  flex: 1 1 auto;
+  display: flex;
+  margin: 0;
+  box-shadow: none;
+  border: 1px solid var(--dn-line);
+  border-left: 3px solid var(--dn-purple-bright);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.reveal .cols.code-output > .col-left > pre > code {
+  flex: 1;
+  border-radius: 0;
+  font-size: 0.5em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: none;
+}
+/* output card fills the same height; its background fills any spare room so it
+   reads like a terminal pane rather than an empty box. */
+.reveal .cols.code-output > .col-left > .output {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--dn-code-bg);
+}
+.reveal .cols.code-output > .col-left > .output > pre {
+  flex: 1;
+}
+.reveal .cols.code-output > .col-left > .output > pre code {
+  max-height: none;
+}
+
+/* ---- Bottom action row (run chip + optional detour cue) ---- */
+.reveal .slide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em 0.9em;
+  margin-top: 0.7em;
+}
+.reveal .slide-actions .run,
+.reveal .slide-actions .primer-cue {
+  margin: 0;
+}
+
 /* ---- Primer cue (the optional "drop down" detour hint) ---- */
 .reveal .primer-cue {
   display: inline-block;
