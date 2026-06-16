@@ -25,34 +25,34 @@ We'll start small, with code you can run, and stack the blocks one at a time unt
 
 <span class="kicker">The problem</span>
 
-## "Just call a model," they said
+## It feels like you're just talking to a model
 
 <div class="cols">
 <div class="col-left">
 
-Real AI features need more than one call:
+You ask ChatGPT, Claude, or Copilot CLI a question, and a clean, confident answer comes back.
 
-- a model, and the freedom to change it
-- your data, retrieved and grounded
-- tools and actions
-- caching, retries, telemetry
-- a way to know it's any good
-- and sometimes, agents
+No setup, no plumbing. Just you and the model.
 
 </div>
 <div class="col-left">
 
-Today that means stitching SDKs from different ecosystems, each with its own shape.
+On its own, though, a model is confidently wrong:
 
-<p class="lead">The .NET team shipped these as composable building blocks so you don't have to.</p>
+- it makes up facts
+- it knows nothing about your data
+- it's frozen at its training cutoff
+- it can't take an action
 
 </div>
 </div>
+
+<p class="lead">The experiences you trust aren't one call. They're a model wrapped in building blocks.</p>
 
 Note:
-Here's the trap. Everybody's first AI demo is one call to a model. Looks easy.
-Then the real work shows up. You want to swap the model when a cheaper one lands. You want answers grounded in your data. You want tools, caching, telemetry, and some way to prove the thing actually works.
-The usual path is gluing together half a dozen libraries from different worlds. The .NET team's answer is to ship these as building blocks that snap together. That's what the next 40 minutes is about.
+Let's start with the trap. You open ChatGPT, Claude, or Copilot CLI, you ask a question, and a clean answer comes back. It feels like you're just talking to the model.
+You're not. Call a model raw, with nothing around it, and it's confidently wrong. It makes up facts, it knows nothing about your data, it's frozen at its training cutoff, and it can't take an action on your behalf.
+The experiences you trust feel like one call because someone wrapped the model in more: retrieval to ground it, tools to let it act, memory, caching, and a way to check the output. That "more" is a set of building blocks. For the next forty minutes we'll build them, one at a time, the .NET way.
 
 ---
 
