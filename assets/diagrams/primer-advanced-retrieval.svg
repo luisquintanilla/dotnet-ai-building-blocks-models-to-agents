@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 460" width="1120" height="460" role="img" aria-label="Advanced retrieval is a swappable pipeline. Your question goes through four steps: Rewrite expands the query with likely terms; Search over-fetches more candidates; Rerank reorders them by true relevance; Check drops weak matches with a quality gate. The result is the best context for the model.">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#512bd4"/><stop offset="1" stop-color="#d600aa"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="460" fill="#1b1b1f"/>
+  <g font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
+
+    <text x="162" y="138" text-anchor="middle" fill="#8f8f99" font-size="13" font-weight="600">in: your question</text>
+
+    <rect x="70" y="150" width="185" height="170" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="162" y="206" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="700">Rewrite</text>
+    <text x="162" y="246" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">expand the query</text>
+    <text x="162" y="268" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">with likely terms</text>
+
+    <rect x="283" y="150" width="185" height="170" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="375" y="206" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="700">Search</text>
+    <text x="375" y="246" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">over-fetch 3x,</text>
+    <text x="375" y="268" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">more candidates</text>
+
+    <rect x="496" y="150" width="185" height="170" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="588" y="206" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="700">Rerank</text>
+    <text x="588" y="246" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">reorder by</text>
+    <text x="588" y="268" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">true relevance</text>
+
+    <rect x="709" y="150" width="185" height="170" rx="16" fill="#1d1d22" stroke="url(#grad)" stroke-width="2"/>
+    <text x="801" y="206" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="700">Check</text>
+    <text x="801" y="246" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">drop weak matches,</text>
+    <text x="801" y="268" text-anchor="middle" fill="#b4b4be" font-size="13" font-weight="600">quality gate</text>
+
+    <rect x="948" y="195" width="124" height="80" rx="14" fill="#241a3a" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="1010" y="232" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">best</text>
+    <text x="1010" y="254" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="700">context</text>
+
+    <line x1="255" y1="235" x2="281" y2="235" stroke="#d600aa" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="468" y1="235" x2="494" y2="235" stroke="#d600aa" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="681" y1="235" x2="707" y2="235" stroke="#d600aa" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="894" y1="235" x2="946" y2="235" stroke="#d600aa" stroke-width="3" marker-end="url(#arrow)"/>
+
+    <text x="560" y="416" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">Advanced retrieval is a swappable pipeline: rewrite, over-fetch, rerank, then keep only what's relevant.</text>
+  </g>
+</svg>

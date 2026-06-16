@@ -97,11 +97,11 @@ And every block gets a tiny runnable sample. Single C# file, dotnet run, real ou
 
 **What we ship**
 
-- The open abstractions: `IChatClient`, `IEmbeddingGenerator`, `Microsoft.Extensions.VectorData`
-- The open standards: MCP and OpenTelemetry
-- Providers and stores plug in behind them: OpenAI, Azure, Ollama, Qdrant, and more
+- The open abstractions we author: `IChatClient`, `IEmbeddingGenerator`, `Microsoft.Extensions.VectorData`
+- First-class support for open standards we didn't invent: MCP (Anthropic), OpenTelemetry (CNCF)
+- The seam itself, so the ecosystem plugs in
 
-<p class="muted small">The same playbook as `ILogger`, EF Core providers, and ASP.NET Core middleware: the platform defines the contract, the ecosystem fills it.</p>
+<p class="muted small">Providers and stores stay with their owners and line up behind the same abstractions: OpenAI, Azure, Ollama, Qdrant, and more. The same playbook as `ILogger`, EF Core providers, and ASP.NET Core middleware: the platform defines the contract, the ecosystem fills it.</p>
 
 </div>
 <div class="col-left">
@@ -119,7 +119,7 @@ And every block gets a tiny runnable sample. Single C# file, dotnet run, real ou
 <p class="lead">We steward the platform and enable the ecosystem, so your code keeps working as the AI space moves.</p>
 
 Note:
-Before we stack a single block, one slide on the why, and on our job on the .NET team. Our role is to ship the seams: the interfaces and the standards. IChatClient, IEmbeddingGenerator, the vector data abstraction, MCP. We don't ship the only model or the only store. We ship the contract, and the ecosystem plugs in behind it, OpenAI, Azure, Ollama, Qdrant, and the rest.
+Before we stack a single block, one slide on the why, and on our job on the .NET team. Our role is to ship the seams: the interfaces we author, like IChatClient, IEmbeddingGenerator, and the vector data abstraction, plus first-class support for the open standards we didn't invent, MCP from Anthropic and OpenTelemetry from the CNCF. We don't ship the only model or the only store. We ship the contract, and the providers stay with their owners and line up behind it, OpenAI, Azure, Ollama, Qdrant, and the rest.
 If that sounds familiar, it's exactly what we did with ILogger, with configuration, with EF Core providers, with ASP.NET Core middleware. The platform defines the seam, the ecosystem fills it.
 And here's what that gives you. No lock-in: you swap the model, the provider, or the store without a rewrite. Your .NET skills carry straight over. You get best-of-breed pieces behind one interface, built on open standards, not a silo. Our job is to steward the platform and enable the ecosystem, so the code you write today keeps working as this space keeps moving. That's the promise behind every block we're about to build.
 
@@ -269,11 +269,11 @@ Closer meaning, higher score. That one idea is what powers search and RAG, which
 ## What's an embedding?
 
 <div class="diagram">
-<img src="assets/diagrams/primer-embedding.svg" alt="Three phrases are embedded into vectors; cosine similarity shows the two .NET phrases are close at 0.62 and the cat phrase is far at 0.07." />
+<img src="assets/diagrams/primer-embedding.svg" alt="Each phrase becomes a vector, a point in meaning space. The two .NET phrases land close together; the cat phrase lands far. Cosine similarity turns that distance into a number: 0.62 close, 0.07 far." />
 </div>
 
 Note:
-Quick detour for anyone new to this. An embedding turns text into a list of numbers, a vector. Similar meanings get similar numbers, so '.NET apps' and '.NET platform' land close, and 'cat sleeps' lands far from both. Cosine similarity is just how close two vectors are, from zero to one, and the helper ships in .NET. That's the whole idea. Now back to the code.
+Quick detour for anyone new to this. An embedding turns text into a vector, which is just a point in space. Phrases with similar meaning land near each other, so '.NET apps' and '.NET platform' cluster together and 'cat sleeps' sits far away. Cosine similarity turns that distance into one number from zero to one, and the helper ships in .NET. That's the whole idea. Now back to the code.
 
 --
 
@@ -452,11 +452,11 @@ And the payoff is the interop. An MCP tool is just an AIFunction. It drops strai
 ## What's MCP?
 
 <div class="diagram">
-<img src="assets/diagrams/primer-mcp.svg" alt="An MCP server (Microsoft Learn) exposes its tools once, and any client can use them." />
+<img src="assets/diagrams/primer-mcp.svg" alt="Your app is an MCP client that connects through MCP, an open standard like USB-C for AI, to the Microsoft Learn server and its tools. Any other MCP server speaks the same protocol, so you build the connector once and integrate everywhere." />
 </div>
 
 Note:
-If MCP is new to you, think of it like HTTP, but for tools. A server exposes its tools once, here the public Microsoft Learn server with its docs search and fetch. Then any client that speaks MCP can use them, your app, someone else's app, any of them. You don't rewrite a tool for every system, you point at the server. And the payoff: each tool arrives as just an AIFunction, the same thing from the tools slide. Now the code.
+If MCP is new to you, the people who made it describe it as a USB-C port for AI. One open standard, and your app, the client, plugs into any tool server. Here that server is the public Microsoft Learn one, exposing docs search and fetch. Swap in GitHub, your own server, or hundreds of others and the protocol is the same, so you build the connector once and integrate everywhere. And the payoff: each tool arrives as just an AIFunction, the same thing from the tools slide. Now the code.
 
 --
 
@@ -724,15 +724,47 @@ On the way out it asks which provider you want. GitHub Models to start for free,
 
 ## Upgrade the defaults
 
+<p class="primer-cue">New to advanced ingestion or retrieval? Two 20-second detours below.</p>
+
 <div class="diagram">
 <img src="assets/diagrams/whats-next.svg" alt="Advanced ingestion and advanced retrieval plugging into the template, replacing its default building blocks." />
 </div>
 
 Note:
 Two upgrades worth knowing about, and they're about problems, not products.
-First problem: real documents are messy. The template handles simple files, but production PDFs have layout, tables, and images. The fix is a composable ingestion pipeline, reader to chunker to enricher to writer, with layout detection. Every step swappable. If you want a worked example, there's one called PdfAIngest.
+First problem: real documents are messy. The template handles simple files, but production PDFs have layout, tables, and images. The fix is a composable ingestion pipeline, reader to chunker to enricher to writer, that chunks by meaning and enriches each piece. Every step swappable. For layout-aware PDFs with ONNX detection, there's a worked example called PdfAIngest.
 Second problem: default top-k retrieval is rarely good enough. Advanced retrieval adds reranking, filtering, and query rewriting. There's an advanced-rag sample to go deeper.
 The point is the shape. Because the blocks are swappable, these aren't rewrites. You replace one default and keep everything else. Which is exactly what I'll show you next.
+
+--
+
+<span class="kicker">What's next · In plain terms</span>
+
+## What's advanced ingestion?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-advanced-ingestion.svg" alt="Advanced ingestion is a pipeline: Read the file, Chunk it by meaning while keeping tables and headings, Enrich each chunk with an AI summary and metadata, then Write it to the vector store." />
+</div>
+
+<p class="muted small">Built in the open: `Microsoft.Extensions.DataIngestion` · dotnet/extensions #7516</p>
+
+Note:
+If advanced ingestion sounds fuzzy, here's the plain version. Real documents are messy: a PDF has tables, columns, and headings, not clean paragraphs. So instead of dumping the raw text and slicing it by character count, you run a small pipeline. Read the file, chunk it by meaning so a table or a section stays whole, enrich each chunk with a short AI summary and metadata like the page number and element type, then write it to the store. Every step is swappable. This is Microsoft.Extensions.DataIngestion, MEDI, and we're building it in the open: the chunk-metadata work is dotnet/extensions PR 7516, with community processors in CommunityToolkit/AI. Want it taken all the way to ONNX layout detection on PDFs? That's the PdfAIngest sample.
+
+--
+
+<span class="kicker">What's next · In plain terms</span>
+
+## What's advanced retrieval?
+
+<div class="diagram">
+<img src="assets/diagrams/primer-advanced-retrieval.svg" alt="Advanced retrieval is a pipeline: Rewrite the query, Search by over-fetching candidates, Rerank by true relevance, Check with a quality gate, producing the best context for the model." />
+</div>
+
+<p class="muted small">Built in the open: `Microsoft.Extensions.DataRetrieval` · dotnet/extensions #7508</p>
+
+Note:
+And advanced retrieval, in plain terms. Default retrieval embeds your question and grabs the nearest top-k chunks, which is often not enough. So you add steps. Rewrite the question with likely document terms, so the search matches the way the docs are actually written. Over-fetch, grab more candidates than you need. Rerank them by true relevance. Then check, drop the weak matches with a quality gate. The result is the best context for the model. This is the new Microsoft.Extensions.DataRetrieval abstraction, proposed in dotnet/extensions issue 7507 and added in PR 7508, with an ONNX reranker and more in CommunityToolkit/AI. The advanced-rag reference app composes the whole thing.
 
 ---
 

@@ -1,38 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 500" width="1120" height="500" role="img" aria-label="Three phrases are embedded into vectors; cosine similarity scores show the two .NET phrases are close (0.62) and the cat phrase is far (0.07).">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 500" width="1120" height="500" role="img" aria-label="Each phrase becomes a vector, a point in meaning space. The two .NET phrases land close together; the cat phrase lands far away. Cosine similarity turns that distance into a number: 0.62 close, 0.07 far.">
   <defs>
-    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#512bd4"/><stop offset="1" stop-color="#d600aa"/>
-    </linearGradient>
     <marker id="arrow" markerWidth="13" markerHeight="11" refX="11" refY="5.5" orient="auto" markerUnits="userSpaceOnUse">
       <path d="M0,0 L12,5.5 L0,11 Z" fill="#d600aa"/>
     </marker>
   </defs>
   <rect width="1120" height="500" fill="#1b1b1f"/>
   <g font-family="'Segoe UI', system-ui, -apple-system, Roboto, sans-serif">
-    <rect x="60" y="116" width="380" height="56" rx="12" fill="#232328" stroke="#3a3a42"/>
-    <text x="82" y="150" fill="#e7e7ee" font-size="16" font-weight="600">I build apps with .NET.</text>
-    <rect x="60" y="188" width="380" height="56" rx="12" fill="#232328" stroke="#3a3a42"/>
-    <text x="82" y="222" fill="#e7e7ee" font-size="16" font-weight="600">.NET is a developer platform.</text>
-    <rect x="60" y="300" width="380" height="56" rx="12" fill="#232328" stroke="#3a3a42"/>
-    <text x="82" y="334" fill="#e7e7ee" font-size="16" font-weight="600">My cat sleeps all day.</text>
 
-    <text x="512" y="206" text-anchor="middle" fill="#a78bfa" font-size="16" font-weight="700">embed</text>
-    <text x="512" y="250" text-anchor="middle" fill="#8f8f99" font-size="12" font-weight="600">text into numbers</text>
-    <line x1="450" y1="228" x2="578" y2="228" stroke="url(#grad)" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <!-- Left: meaning space (2-D plot) -->
+    <rect x="60" y="104" width="436" height="300" rx="16" fill="#1d1d22" stroke="#512bd4" stroke-width="1.5"/>
+    <text x="86" y="144" fill="#a78bfa" font-size="17" font-weight="700">meaning space</text>
 
-    <rect x="600" y="104" width="460" height="300" rx="16" fill="#1d1d22" stroke="#512bd4" stroke-width="1.5"/>
-    <text x="630" y="150" fill="#a78bfa" font-size="18" font-weight="700">cosine similarity</text>
+    <line x1="120" y1="172" x2="120" y2="368" stroke="#3a3a42" stroke-width="1.5"/>
+    <line x1="120" y1="368" x2="468" y2="368" stroke="#3a3a42" stroke-width="1.5"/>
 
-    <text x="630" y="210" fill="#b4b4be" font-size="15" font-weight="600">'.NET apps'  vs  '.NET platform'</text>
-    <text x="1030" y="210" text-anchor="end" fill="#ffffff" font-size="20" font-weight="700">0.62</text>
-    <text x="1030" y="234" text-anchor="end" fill="#a78bfa" font-size="12" font-weight="700">close</text>
+    <ellipse cx="216" cy="226" rx="86" ry="60" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.55"/>
+    <text x="300" y="178" fill="#a78bfa" font-size="13" font-weight="700">close</text>
 
-    <text x="630" y="298" fill="#b4b4be" font-size="15" font-weight="600">'.NET apps'  vs  'cat sleeps'</text>
-    <text x="1030" y="298" text-anchor="end" fill="#ffffff" font-size="20" font-weight="700">0.07</text>
-    <text x="1030" y="322" text-anchor="end" fill="#8f8f99" font-size="12" font-weight="700">far</text>
+    <circle cx="180" cy="208" r="7" fill="#a78bfa"/>
+    <text x="194" y="213" fill="#e7e7ee" font-size="14" font-weight="600">'.NET apps'</text>
+    <circle cx="224" cy="252" r="7" fill="#a78bfa"/>
+    <text x="238" y="257" fill="#e7e7ee" font-size="14" font-weight="600">'.NET platform'</text>
 
-    <text x="630" y="374" fill="#8f8f99" font-size="13" font-weight="600">Higher score, closer meaning. The helper ships in .NET (TensorPrimitives).</text>
+    <circle cx="424" cy="332" r="7" fill="#8f8f99"/>
+    <text x="410" y="337" text-anchor="end" fill="#b4b4be" font-size="14" font-weight="600">'cat sleeps'</text>
+    <text x="436" y="318" fill="#8f8f99" font-size="13" font-weight="700">far</text>
 
-    <text x="560" y="464" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">An embedding turns text into a list of numbers. Closer numbers, closer meaning.</text>
+    <text x="86" y="394" fill="#8f8f99" font-size="13" font-weight="600">each phrase becomes a vector, a point</text>
+
+    <!-- Middle: compare -->
+    <text x="528" y="244" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="700">cosine</text>
+    <line x1="498" y1="254" x2="558" y2="254" stroke="#d600aa" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="528" y="282" text-anchor="middle" fill="#8f8f99" font-size="12" font-weight="600">distance</text>
+
+    <!-- Right: cosine similarity (the number) -->
+    <rect x="576" y="104" width="464" height="300" rx="16" fill="#1d1d22" stroke="#512bd4" stroke-width="1.5"/>
+    <text x="602" y="144" fill="#a78bfa" font-size="17" font-weight="700">cosine similarity</text>
+
+    <text x="602" y="206" fill="#b4b4be" font-size="15" font-weight="600">'.NET apps'  vs  '.NET platform'</text>
+    <text x="1014" y="206" text-anchor="end" fill="#ffffff" font-size="20" font-weight="700">0.62</text>
+    <text x="1014" y="230" text-anchor="end" fill="#a78bfa" font-size="12" font-weight="700">close</text>
+
+    <text x="602" y="294" fill="#b4b4be" font-size="15" font-weight="600">'.NET apps'  vs  'cat sleeps'</text>
+    <text x="1014" y="294" text-anchor="end" fill="#ffffff" font-size="20" font-weight="700">0.07</text>
+    <text x="1014" y="318" text-anchor="end" fill="#8f8f99" font-size="12" font-weight="700">far</text>
+
+    <text x="602" y="372" fill="#8f8f99" font-size="13" font-weight="600">1.0 = same meaning, 0 = unrelated. The helper ships in .NET (TensorPrimitives).</text>
+
+    <text x="560" y="466" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">An embedding turns text into a vector, a point in space. Closer points, closer meaning.</text>
   </g>
 </svg>
