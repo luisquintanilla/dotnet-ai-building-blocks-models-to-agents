@@ -12,7 +12,9 @@
     // Node for the presentation build and the static server (serve.mjs).
     "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
     // gh is handy for tokens and repo work.
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    // az lets you sign in and configure Azure OpenAI (see .devcontainer/README.md).
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
   },
 
   // serve.mjs serves the built deck on 8000 (npm run preview).

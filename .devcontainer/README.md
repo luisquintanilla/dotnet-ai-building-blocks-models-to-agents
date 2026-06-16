@@ -58,6 +58,52 @@ Either way, confirm it is set:
 echo $GITHUB_TOKEN | head -c 8
 ```
 
+## Use Azure OpenAI instead of GitHub Models
+
+GitHub Models is the default in the samples because it needs only a token. When you want to
+run against your own Azure OpenAI deployment, the Azure CLI in this container does the heavy
+lifting. Sign in once:
+
+```bash
+az login --use-device-code
+az account set --subscription "<your-subscription>"   # if you have more than one
+```
+
+You can inspect or create deployments without leaving the container:
+
+```bash
+# List Azure OpenAI resources you can reach
+az cognitiveservices account list -o table
+
+# List the model deployments on one resource
+az cognitiveservices account deployment list \
+  --name <resource-name> --resource-group <group> -o table
+```
+
+Then point a sample at Azure OpenAI. The cleanest path is keyless: `DefaultAzureCredential`
+reuses your `az login`, so there is no key to manage. Swap the provider construction in a
+sample for this (add the two packages at the top, and use your deployment name):
+
+```csharp
+#:package Azure.AI.OpenAI@*          // use the latest on NuGet.org
+#:package Azure.Identity@*
+
+using Azure.AI.OpenAI;
+using Azure.Identity;
+
+var endpoint = new Uri(Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")!);
+AzureOpenAIClient provider = new(endpoint, new DefaultAzureCredential());
+
+IChatClient chat = provider.GetChatClient("your-deployment-name").AsIChatClient();
+```
+
+Everything below the client stays the same, because it still sees `IChatClient`. For image
+generation, the same swap applies with `provider.GetImageClient("your-image-deployment")`.
+
+Keyless needs your signed-in identity to have the **Cognitive Services OpenAI User** role on
+the resource. If you would rather use a key, set `AZURE_OPENAI_ENDPOINT` and pass an
+`AzureKeyCredential` instead.
+
 ## Run things
 
 ```bash
