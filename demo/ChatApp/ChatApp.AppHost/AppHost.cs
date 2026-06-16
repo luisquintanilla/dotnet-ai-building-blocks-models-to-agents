@@ -1,9 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// You will need to set the connection string to your own value
-// You can do this using Visual Studio's "Manage User Secrets" UI, or on the command line:
+// Azure OpenAI (Foundry), keyless. Set the endpoint-only connection string as a user secret on
+// this AppHost project, which tells the client integration to authenticate with managed identity
+// (DefaultAzureCredential) -- no API key is stored anywhere:
 //   cd this-project-directory
-//   dotnet user-secrets set ConnectionStrings:openai "Endpoint=https://models.inference.ai.azure.com;Key=YOUR-API-KEY"
+//   dotnet user-secrets set ConnectionStrings:openai "https://<your-resource>.openai.azure.com/"
+// Sign in first with `az login`. Your identity needs the "Cognitive Services OpenAI User" role on
+// the resource. See demo/ChatApp/README.md.
 var openai = builder.AddConnectionString("openai");
 
 var markitdown = builder.AddContainer("markitdown", "mcp/markitdown")

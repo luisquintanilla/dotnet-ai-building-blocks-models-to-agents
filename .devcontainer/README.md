@@ -14,8 +14,9 @@ Open it two ways:
 
 - `samples/` — the .NET 10 file-based apps, run against GitHub Models.
 - The RevealJS deck — `npm run preview`, served on port 8000 (auto-forwarded).
-- `demo/ChatApp` — the Aspire app. Docker is available through docker-in-docker, so Aspire can
-  pull and run its markitdown container. Follow [`demo/README.md`](../demo/README.md) to run it.
+- `demo/ChatApp` — the Aspire app. The Aspire CLI is preinstalled (devcontainer feature) and Docker
+  is available through docker-in-docker, so `aspire run` can pull and run its markitdown container.
+  Follow [`demo/README.md`](../demo/README.md) to configure Azure OpenAI (keyless) and run it.
 
 ## Set GITHUB_TOKEN for the samples
 
@@ -105,9 +106,12 @@ dotnet run 01-chat.cs
 # Presentation (build + serve on http://localhost:8000)
 npm run preview
 
-# Demo app (Aspire). Docker is available, so this works here too.
-dotnet run --project demo/ChatApp/ChatApp.AppHost
+# Demo app (Aspire + Azure OpenAI, keyless). Docker is available, so this works here too.
+az login
+cd demo/ChatApp
+aspire run
 ```
 
-`npm install` already ran when the container was created, so the deck is ready to build. For
-the demo app, set its GitHub Models token first as shown in [`demo/README.md`](../demo/README.md).
+`npm install` already ran when the container was created, so the deck is ready to build, and the
+Aspire CLI is installed by the devcontainer feature. For the demo app, sign in with `az login` and
+set its Azure OpenAI endpoint user-secret first, as shown in [`demo/README.md`](../demo/README.md).

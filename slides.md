@@ -129,19 +129,7 @@ And here's what that gives you. No lock-in: you swap the model, the provider, or
 
 ## One interface for every provider
 
-<div class="cols narrow-left">
-<div class="col-left">
-
-`IChatClient` is the foundation. Talk to GitHub Models, Azure OpenAI, OpenAI, Ollama, or Foundry Local through the same interface.
-
-<div class="badges">
-<span class="badge ext">Microsoft.Extensions.AI</span>
-<span class="badge">provider-agnostic</span>
-</div>
-
-<span class="run">dotnet run 01-chat.cs</span>
-
-</div>
+<div class="cols">
 <div class="col-left">
 
 ```csharp
@@ -158,11 +146,30 @@ ChatResponse response =
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+.NET is a versatile software development framework created by Microsoft that enables developers to build, deploy, and run a wide range of applications across different platforms using multiple programming languages.
+```
+
 </div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">Microsoft.Extensions.AI</span>
+<span class="badge">provider-agnostic</span>
+</div>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/01-chat.cs" target="_blank" rel="noopener">dotnet run 01-chat.cs</a>
 
 <p class="repeat-beat">Familiar .NET pattern · simplest thing that works · interoperable · same foundation</p>
 
 Note:
+`IChatClient` is the foundation. It talks to GitHub Models, Azure OpenAI, OpenAI, Ollama, or Foundry Local through the same interface.
 Block one, models. The only provider-specific lines are the two that build the client. Everything after sees IChatClient and nothing else.
 Want a different model? Change the string. Different provider? Change those two lines. The rest of your app doesn't move. That's the interop promise, and it's the foundation the other five blocks sit on.
 Run the sample and you'll see the same code answer with gpt-4o-mini and then gpt-4o, no other changes.
@@ -178,11 +185,11 @@ Run the sample and you'll see the same code answer with gpt-4o-mini and then gpt
 
 The same `IChatClient` takes images, not just text. Add an image content part and ask about it.
 
-<span class="run">dotnet run 02-vision.cs</span>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/02-vision.cs" target="_blank" rel="noopener">dotnet run 02-vision.cs</a>
 
 Need a picture *out*? `IImageGenerator` is the same one-interface pattern.
 
-<span class="run">dotnet run 03-image-generation.cs</span>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/03-image-generation.cs" target="_blank" rel="noopener">dotnet run 03-image-generation.cs</a>
 
 <p class="muted small">Speech-to-text (`ISpeechToTextClient`) is the same pattern. Real-time audio is available today through the provider SDK.</p>
 
@@ -231,15 +238,6 @@ One block lit. Models. Hold this picture in your head, because we're going to ad
 <div class="cols">
 <div class="col-left">
 
-`IEmbeddingGenerator` is the same idea as `IChatClient`: one interface, any provider. Turn text into vectors, compare by cosine similarity.
-
-<span class="run">dotnet run 04-embeddings.cs</span>
-
-<p class="primer-cue">New to embeddings? Take the 20-second detour.</p>
-
-</div>
-<div class="col-left">
-
 ```csharp
 IEmbeddingGenerator<string, Embedding<float>> embedder =
     provider.GetEmbeddingClient("text-embedding-3-small")
@@ -255,9 +253,26 @@ float score = TensorPrimitives.CosineSimilarity(
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+'.NET apps'  vs  '.NET platform' : 0.568
+'.NET apps'  vs  'cat sleeps'    : 0.047
+```
+
 </div>
 
+</div>
+</div>
+
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/04-embeddings.cs" target="_blank" rel="noopener">dotnet run 04-embeddings.cs</a>
+<p class="primer-cue">New to embeddings? Take the 20-second detour.</p>
+
 Note:
+`IEmbeddingGenerator` is the same idea as `IChatClient`: one interface, any provider. Turn text into vectors, compare by cosine similarity.
 Block two is data and memory, and it starts with embeddings. Models match on meaning, not keywords. So you turn text into vectors and compare them.
 Notice the interface. IEmbeddingGenerator is the exact same pattern as IChatClient. One interface, swap the provider underneath. The cosine similarity helper ships in the box with .NET.
 Closer meaning, higher score. That one idea is what powers search and RAG, which is the next slide.
@@ -284,20 +299,6 @@ Quick detour for anyone new to this. An embedding turns text into a vector, whic
 <div class="cols">
 <div class="col-left">
 
-`Microsoft.Extensions.VectorData` is the storage abstraction. Code against it once, swap the store like you swap an EF Core provider.
-
-<div class="badges">
-<span class="badge ext">Microsoft.Extensions.VectorData</span>
-<span class="badge">in-memory → Qdrant → Azure AI Search</span>
-</div>
-
-<span class="run">dotnet run 05-rag.cs</span>
-
-<p class="primer-cue">New to RAG? Take the 20-second detour.</p>
-
-</div>
-<div class="col-left">
-
 ```csharp
 await foreach (VectorSearchResult<Doc> hit in
     docs.SearchAsync(queryVector.Vector, top: 2))
@@ -312,11 +313,34 @@ ChatResponse answer = await chat.GetResponseAsync(
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+[0.457] Microsoft.Extensions.AI.Evaluation scores response quality using the same IChatClient.
+[0.222] Model Context Protocol, MCP, is an open standard for giving models access to tools.
+
+You can score your model's answers using Microsoft.Extensions.AI.Evaluation, which evaluates response quality using the same IChatClient.
+```
+
 </div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">Microsoft.Extensions.VectorData</span>
+<span class="badge">in-memory → Qdrant → Azure AI Search</span>
+</div>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/05-rag.cs" target="_blank" rel="noopener">dotnet run 05-rag.cs</a>
+<p class="primer-cue">New to RAG? Take the 20-second detour.</p>
 
 <p class="repeat-beat">Familiar .NET pattern · simplest thing that works · interoperable · same foundation</p>
 
 Note:
+`Microsoft.Extensions.VectorData` is the storage abstraction. Code against it once, swap the store like you swap an EF Core provider.
 Now use those vectors. RAG is three steps: retrieve the closest text, augment the prompt with it, generate the answer.
 The storage sits behind Microsoft.Extensions.VectorData. In the sample it's the in-memory store. To move to Qdrant, Azure AI Search, Redis, or SQLite, you change the store and the rest of this code stays put. Same story as switching an EF Core provider.
 This is exactly how the chat template grounds its answers, and we'll see that later.
@@ -352,15 +376,6 @@ Two blocks lit. Models, plus data and memory. The picture is filling in.
 <div class="cols">
 <div class="col-left">
 
-`AIFunctionFactory` wraps a normal C# method as a tool. `UseFunctionInvocation` runs it when the model asks, then feeds the result back.
-
-<span class="run">dotnet run 06-tools.cs</span>
-
-<p class="primer-cue">New to function calling? Take the 20-second detour.</p>
-
-</div>
-<div class="col-left">
-
 ```csharp
 IChatClient chat = inner.AsBuilder()
     .UseFunctionInvocation()
@@ -378,9 +393,25 @@ await chat.GetResponseAsync(prompt, options);
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+The current time is Tuesday, June 16, 2026, at 11:46 AM. There are 192 days until December 25th.
+```
+
 </div>
 
+</div>
+</div>
+
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/06-tools.cs" target="_blank" rel="noopener">dotnet run 06-tools.cs</a>
+<p class="primer-cue">New to function calling? Take the 20-second detour.</p>
+
 Note:
+`AIFunctionFactory` wraps a normal C# method as a tool. `UseFunctionInvocation` runs it when the model asks, then feeds the result back.
 Block three, tools. A model reasons about text but it can't read a clock or call your API. So you hand it tools.
 AIFunctionFactory turns a plain C# method into a tool. The method name, the parameter names, and the Description attribute become the schema the model sees. Name things clearly.
 And look how tools turn on: AsBuilder, UseFunctionInvocation, Build. That's the ASP.NET Core builder pattern. You wrote plain methods, the model called them. We never called them ourselves.
@@ -407,20 +438,6 @@ One thing that trips people up: the model never runs your code. Here's what actu
 <div class="cols">
 <div class="col-left">
 
-Model Context Protocol is "HTTP for tools." A server exposes tools once, any client uses them. An MCP tool is just an `AIFunction`.
-
-<div class="badges">
-<span class="badge open">open standard</span>
-<span class="badge">consume &amp; serve</span>
-</div>
-
-<span class="run">dotnet run 07-mcp.cs</span>
-
-<p class="primer-cue">New to MCP? Take the 20-second detour.</p>
-
-</div>
-<div class="col-left">
-
 ```csharp
 await using McpClient learn =
     await McpClient.CreateAsync(new HttpClientTransport(new()
@@ -436,7 +453,28 @@ await chat.GetResponseAsync(question,
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+Discovered tools: microsoft_docs_search, microsoft_code_sample_search, microsoft_docs_fetch
+
+Microsoft.Extensions.AI is a set of core .NET libraries that provides a unified layer of C# abstractions for working with AI services such as chat models, embeddings, and middleware, so developers can integrate generative AI without tying their apps to a single provider.
+```
+
 </div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge open">open standard</span>
+<span class="badge">consume &amp; serve</span>
+</div>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/07-mcp.cs" target="_blank" rel="noopener">dotnet run 07-mcp.cs</a>
+<p class="primer-cue">New to MCP? Take the 20-second detour.</p>
 
 <p class="repeat-beat">Familiar .NET pattern · simplest thing that works · interoperable · same foundation</p>
 
@@ -483,7 +521,7 @@ Exactly like the ASP.NET Core request pipeline. Wrap the client and each piece d
 <span class="badge">Aspire dashboard</span>
 </div>
 
-<span class="run">dotnet run 08-middleware.cs</span>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/08-middleware.cs" target="_blank" rel="noopener">dotnet run 08-middleware.cs</a>
 
 </div>
 <div class="col-left">
@@ -524,17 +562,6 @@ Four blocks lit. Now we can ship it. But how do we know it's good, and how do we
 <div class="cols">
 <div class="col-left">
 
-`Microsoft.Extensions.AI.Evaluation` scores responses with evaluators that use an `IChatClient` as the judge. Same foundation.
-
-This block isn't in the template. You add it in your **test project and CI**.
-
-<span class="run">dotnet run 09-eval.cs</span>
-
-<p class="primer-cue">A model grading a model? Take the 20-second detour.</p>
-
-</div>
-<div class="col-left">
-
 ```csharp
 IEvaluator evaluators = new CompositeEvaluator(
     new RelevanceEvaluator(),
@@ -550,7 +577,27 @@ NumericMetric m = result.Get<NumericMetric>(name);
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+Answer: Microsoft.Extensions.AI utilizes the `IChatInterface` for chat functionalities. This interface is part of the broader set of tools and extensions provided for AI integration within .NET applications, enabling robust chat capabilities.
+
+Relevance    : 4.0/5  (Good)
+Coherence    : 4.0/5  (Good)
+Groundedness : 3.0/5  (Average)
+```
+
 </div>
+
+</div>
+</div>
+
+<p class="muted small">Not in the template. You add evaluations in your <strong>test project and CI</strong>.</p>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/09-eval.cs" target="_blank" rel="noopener">dotnet run 09-eval.cs</a>
+<p class="primer-cue">A model grading a model? Take the 20-second detour.</p>
 
 <p class="repeat-beat">Familiar .NET pattern · simplest thing that works · interoperable · same foundation</p>
 
@@ -605,18 +652,6 @@ And it sits on the same .NET foundation: dependency injection, the builder, conf
 <div class="cols">
 <div class="col-left">
 
-You just saw what an agent wraps. Here it is in code. You already have an `IChatClient` and tools, so wrap them as a `ChatClientAgent`. That's Microsoft Agent Framework. No rewrite.
-
-<div class="badges">
-<span class="badge ext">Microsoft.Agents.AI</span>
-<span class="badge">same IChatClient</span>
-</div>
-
-<span class="run">dotnet run 10-agent.cs</span>
-
-</div>
-<div class="col-left">
-
 ```csharp
 AIAgent agent = new ChatClientAgent(
     chat,
@@ -632,7 +667,27 @@ AgentSession session = await agent.CreateSessionAsync();
 ```
 
 </div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output</span>
+
+```text
+There are 192 days until December 25th! 🎉 Get ready for the festivities!
+
+Your name is Luis! 😊
+```
+
 </div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">Microsoft.Agents.AI</span>
+<span class="badge">same IChatClient</span>
+</div>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/10-agent.cs" target="_blank" rel="noopener">dotnet run 10-agent.cs</a>
 
 Note:
 We just defined the agent. Now here it is in one line of code, the graduated moment the whole talk has been building toward.
@@ -650,7 +705,7 @@ No new mental model, no rewrite. A session carries the conversation so it rememb
 
 One agent is enough until the work has parts. Then you compose them. A concurrent workflow fans out to specialists and fans the results back in.
 
-<span class="run">dotnet run 11-multi-agent.cs</span>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/11-multi-agent.cs" target="_blank" rel="noopener">dotnet run 11-multi-agent.cs</a>
 
 </div>
 <div class="col-left">
@@ -710,7 +765,7 @@ The template is just the blocks, assembled. And evaluations plugs in right here,
 
 <span class="run">dotnet new aichatweb -o MyChatApp --aspire</span>
 
-<span class="run">dotnet run</span>
+<span class="run">aspire run</span>
 
 <p class="muted small">Pick your provider: GitHub Models, Azure OpenAI, OpenAI, or Ollama. Same building blocks underneath.</p>
 
@@ -833,6 +888,7 @@ And that's the deal we make with you on the .NET team. We ship the building bloc
 
 **Try**
 <span class="run">dotnet new aichatweb -o MyChatApp --aspire</span>
+<span class="run">aspire run</span>
 
 **Learn**
 - The .NET + AI hub: `learn.microsoft.com/dotnet/ai`

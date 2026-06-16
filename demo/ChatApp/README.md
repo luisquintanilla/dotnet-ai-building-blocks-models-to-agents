@@ -15,19 +15,43 @@ This incompatibility can be addressed by upgrading to Docker Desktop 4.41.1. See
 
 # Configure the AI Model Provider
 
-## Using GitHub Models
-To use models hosted by GitHub Models, you will need to create a GitHub personal access token. The token should not have any scopes or permissions. See [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+## Using Azure OpenAI (keyless)
 
-From the command line, configure your token for this project using .NET User Secrets by running the following commands:
+This app is configured for Azure OpenAI with **keyless** authentication. There is no API key to
+manage — the client uses `DefaultAzureCredential` (your `az login`).
 
-```sh
-cd ChatApp.AppHost
-dotnet user-secrets set ConnectionStrings:openai "Endpoint=https://models.inference.ai.azure.com;Key=YOUR-API-KEY"
-```
+1. Sign in and make sure you have access (one time):
 
-Learn more about [prototyping with AI models using GitHub Models](https://docs.github.com/github-models/prototyping-with-ai-models).
+   ```sh
+   az login
+   ```
+
+   Your identity needs the **Cognitive Services OpenAI User** role on the resource.
+
+2. Set the **endpoint only** (no key) as a user secret on the app host:
+
+   ```sh
+   cd ChatApp.AppHost
+   dotnet user-secrets set ConnectionStrings:openai "https://<your-resource>.openai.azure.com/"
+   ```
+
+The app expects a chat deployment named `chat` and an embeddings deployment named `embedding`.
+Adjust the names in `ChatApp.Web/Program.cs` if yours differ.
+
+Learn more about [keyless authentication for Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/how-to/managed-identity).
 
 # Running the application
+
+## Using the Aspire CLI
+
+Sign in, then run from the `ChatApp` folder:
+
+```sh
+az login
+aspire run
+```
+
+The Aspire dashboard opens; launch the web app from there.
 
 ## Using Visual Studio
 

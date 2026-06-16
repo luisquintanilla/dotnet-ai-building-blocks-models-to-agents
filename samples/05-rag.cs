@@ -1,6 +1,6 @@
 #:package OpenAI@2.11.0
 #:package Microsoft.Extensions.AI.OpenAI@10.7.0
-#:package Microsoft.Extensions.VectorData.Abstractions@10.7.0
+#:package Microsoft.Extensions.VectorData.Abstractions@10.1.0
 #:package Microsoft.SemanticKernel.Connectors.InMemory@1.74.0-preview
 
 // Block 2 - Data and memory, part two: RAG.

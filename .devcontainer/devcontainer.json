@@ -2,7 +2,7 @@
   // Dev container for the talk. It gives you everything to:
   //   - run the .NET 10 file-based samples in samples/ against GitHub Models,
   //   - build and serve the RevealJS presentation with npm, and
-  //   - run demo/ChatApp (Aspire), since Docker is available via docker-in-docker.
+  //   - run demo/ChatApp with the Aspire CLI, since Docker is available via docker-in-docker.
   // See .devcontainer/README.md.
   "name": "dotnet-ai-building-blocks",
 
@@ -10,6 +10,9 @@
   "image": "mcr.microsoft.com/devcontainers/dotnet:1-10.0",
 
   "features": {
+    // The Aspire CLI (for `aspire run` on demo/ChatApp). Official Aspire devcontainer feature; it
+    // also brings the Aspire VS Code extension and auto port-forwarding.
+    "ghcr.io/microsoft/aspire-devcontainer-feature/aspire:2": {},
     // Node for the presentation build and the static server (serve.mjs).
     "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
     // gh is handy for tokens and repo work.

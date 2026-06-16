@@ -1,6 +1,9 @@
 # Build output
 public/
 
+# Slide capture / verification scratch output
+shots/
+
 # Node
 node_modules/
 npm-debug.log*

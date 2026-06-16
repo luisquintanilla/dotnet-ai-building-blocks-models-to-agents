@@ -215,6 +215,47 @@
   content: "› ";
   color: var(--dn-magenta);
 }
+/* Run chip as a link to the sample on GitHub. */
+.reveal a.run {
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.reveal a.run:hover {
+  border-color: var(--dn-magenta);
+  color: #eafbea;
+}
+
+/* ---- Output panel (captured sample output, shown next to the code) ---- */
+.reveal .output {
+  text-align: left;
+  border: 1px solid var(--dn-line);
+  border-left: 3px solid var(--dn-magenta);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.reveal .output .output-label {
+  display: block;
+  font-family: var(--r-code-font);
+  font-size: 0.42em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dn-purple-bright);
+  padding: 0.8em 1.1em 0;
+}
+.reveal .output pre {
+  margin: 0.3em 0 0;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+}
+.reveal .output pre code {
+  border-radius: 0;
+  font-size: 0.5em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 460px;
+}
 
 /* ---- Primer cue (the optional "drop down" detour hint) ---- */
 .reveal .primer-cue {
