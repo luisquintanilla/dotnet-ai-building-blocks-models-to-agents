@@ -773,12 +773,12 @@ The template is just the blocks, assembled. And evaluations plugs in right here,
 
 <span class="run">aspire run</span>
 
-<p class="muted small">Pick your provider: GitHub Models, Azure OpenAI, OpenAI, or Ollama. Same code, same model, just a different endpoint.</p>
+<p class="muted small">Pick your provider: GitHub Models, Azure OpenAI, OpenAI, or Ollama. Same code, just a different endpoint.</p>
 
 Note:
 You don't have to take my word for it. Install the templates, scaffold an aichat app, run it. Two minutes.
 On the way out it asks which provider you want. GitHub Models to start for free, Azure OpenAI for production, OpenAI, or Ollama to run local. Doesn't matter, because underneath it's the same building blocks we just walked through, and the same IChatClient seam lets you switch later.
-To make that concrete: every sample today ran gpt-4.1-mini on GitHub Models, for free. The production app I'm about to show runs that same gpt-4.1-mini on Azure OpenAI. Same code, same model, just a different endpoint. That's the interoperability promise you can actually see.
+To make that concrete: every sample today ran gpt-4.1-mini on GitHub Models, for free. The production app I'm about to show runs gpt-5-mini on Azure OpenAI from Foundry. Same code, a newer model, a different endpoint, and the only line that changed is the deployment name. That's the interoperability promise you can actually see.
 
 ---
 
@@ -841,13 +841,13 @@ Same template. Two blocks swapped: layout-aware ingestion and better retrieval. 
 
 <span class="run">git diff main..advanced-demo</span>
 
-<p class="muted small">The diff is the whole point. A few changed components, not a new app.</p>
+<p class="muted small">The packages and the wiring change. The Blazor UI and the app shape don't.</p>
 
 </div>
 <div class="col-left">
 
-- `main` — the scaffolded template, default ingestion and RAG
-- `advanced-demo` — same app, advanced ingestion + advanced retrieval
+- `main`: the scaffolded template, default ingestion and RAG
+- `advanced-demo`: same app, advanced ingestion + advanced retrieval
 
 Run it on a real PDF and watch the grounding improve.
 
@@ -857,9 +857,61 @@ Run it on a real PDF and watch the grounding improve.
 <p class="repeat-beat">Swap a default · keep everything else · same foundation</p>
 
 Note:
-This is the payoff for the whole swappable-blocks story, live. I took the template you just saw, made a branch called advanced-demo, and changed exactly two things: the ingestion got layout-aware, and the retrieval got smarter.
-Then look at the diff. Main versus the branch. It's small. A few components swapped, the Blazor UI and the wiring untouched. That's the thesis on screen: upgrading an AI app is changing a block, not starting over.
-I'll run the branch on a real PDF so you can see the same questions get better-grounded answers.
+This is the payoff for the whole swappable-blocks story. I took the template you just saw, made a branch called advanced-demo, and swapped two blocks: ingestion became layout-aware with a real PDF vision reader, and retrieval became a real pipeline with reranking and a quality gate.
+Look at what the diff touches: the project file pulls in the real building-block packages, and Program.cs composes the pipelines. What it doesn't touch is the Blazor UI or the shape of the app. That's the thesis on screen: upgrading an AI app is composing different blocks, not starting over.
+And these are the real, in-flight packages, not a mock. The next slide shows the actual retrieval code and the real output it produces.
+
+--
+
+<span class="kicker">The final demo · Real building blocks</span>
+
+## Retrieval that refuses to guess
+
+<div class="cols code-output">
+<div class="col-left">
+
+```csharp
+// advanced-demo/Program.cs
+builder.Services.AddRetrievalPipeline()
+    .UseQueryExpansion()  // rewrite with doc terms
+    .UseLlmReranking()    // re-order by relevance
+    .UseCrag();           // grade it, flag low confidence
+```
+
+</div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output · gpt-5-mini on Azure OpenAI</span>
+
+```text
+Q: How do I power on the watch?
+  retrieved   3 chunks (reranked)
+  crag_path   Ambiguous, needs follow-up
+
+Q: How long does the battery last?
+  retrieved   0 chunks
+  crag_path   Incorrect
+  low_confidence: true
+  "the passages don't mention battery life"
+```
+
+</div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">Microsoft.Extensions.DataRetrieval</span>
+<span class="badge">CRAG quality gate</span>
+</div>
+
+<p class="muted small">The manual doesn't cover it, so the app says nothing rather than letting the model invent an answer.</p>
+
+Note:
+Here's the real code from the branch, and the real output. The retrieval pipeline is three steps: rewrite the query with terms the docs actually use, rerank the candidates by true relevance, then CRAG, the quality gate, grades the result.
+Watch the two questions. For "how do I power on the watch?", the docs cover it, so it returns three reranked chunks and flags the answer as ambiguous, needs follow-up. Honest. For "how long does the battery last?", that spec isn't in this manual, so instead of handing the model irrelevant text to riff on, CRAG returns nothing and flags low confidence.
+That's the whole point, and it closes the loop on the problem we opened with. A bare model call will confidently make up a battery number. The retrieval building block, composed from the real Microsoft.Extensions.DataRetrieval abstraction, refuses to guess. Same Blazor app, same chat box, one block swapped.
 
 ---
 
