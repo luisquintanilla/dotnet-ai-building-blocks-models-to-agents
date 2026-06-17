@@ -169,9 +169,56 @@ ChatResponse response =
 
 Note:
 `IChatClient` is the foundation. It talks to GitHub Models, Azure OpenAI, OpenAI, Ollama, or Foundry Local through the same interface.
-Block one, models. The only provider-specific lines are the two that build the client. Everything after sees IChatClient and nothing else.
+Block one, models. Walk the code: the first statement builds the provider client from a token and an endpoint, and those two lines are the only provider-specific part. GetChatClient then AsIChatClient hands you an IChatClient. After that, GetResponseAsync is a single call and everything sees IChatClient and nothing else.
 Want a different model? Change the string. Different provider? Change those two lines. The rest of your app doesn't move. That's the interop promise, and it's the foundation the other five blocks sit on.
-Run the sample and you'll see the same code answer with gpt-4.1-mini and then gpt-4o, no other changes.
+Run the sample and you'll see the same code answer with gpt-4.1-mini and then gpt-4o, no other changes. The next slide proves the same point with a model running locally.
+
+--
+
+<span class="kicker">Block 1 · Provider swap</span>
+
+## Same code, swap the provider
+
+<div class="cols code-output">
+<div class="col-left">
+
+```csharp
+// the only change: new up a different client
+IChatClient chat = new OllamaApiClient(
+    new Uri("http://localhost:11434"),
+    "llama3.2:1b");
+
+// this line is byte-for-byte the same as before
+ChatResponse response =
+    await chat.GetResponseAsync(
+        "In one sentence, what is .NET?");
+```
+
+</div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output · local Ollama</span>
+
+```text
+.NET (pronounced "dot-net") is a comprehensive software development framework developed by Microsoft, primarily designed for building large-scale applications using object-oriented programming languages such as C# and Visual Basic .NET.
+```
+
+</div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">OllamaSharp</span>
+<span class="badge">same IChatClient</span>
+<span class="badge">runs offline</span>
+</div>
+<a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/01b-ollama.cs" target="_blank" rel="noopener">dotnet run 01b-ollama.cs</a>
+
+Note:
+Same demo, different provider, and the point is how little moved. Up top is the only change from the last slide: instead of the OpenAI client we new up an OllamaApiClient pointed at localhost, and it hands back an IChatClient. The line below it, GetResponseAsync, is the exact same call you already saw.
+The model now runs on my machine, fully offline, no key, no cloud. Different SDK, different model, same interface, same code. The answer isn't the point here, the swap is. That's the interop promise made concrete: change the provider, keep the app.
 
 --
 
@@ -186,11 +233,18 @@ The same `IChatClient` takes images, not just text. Add an image content part an
 
 <a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/02-vision.cs" target="_blank" rel="noopener">dotnet run 02-vision.cs</a>
 
+<div class="output">
+<span class="output-label">Output · 02-vision.cs</span>
+
+```text
+a scenic view of green mountains under a partly cloudy blue sky.
+```
+
+</div>
+
 Need a picture *out*? `IImageGenerator` is the same one-interface pattern.
 
 <a class="run" href="https://github.com/luisquintanilla/dotnet-ai-building-blocks-models-to-agents/blob/main/samples/03-image-generation.cs" target="_blank" rel="noopener">dotnet run 03-image-generation.cs</a>
-
-<p class="muted small">Speech-to-text (`ISpeechToTextClient`) is the same pattern. Real-time audio is available today through the provider SDK.</p>
 
 </div>
 <div class="col-left">
@@ -208,15 +262,16 @@ ChatResponse seen = await chat.GetResponseAsync([msg]);
 
 // a picture out, same kind of interface
 IImageGenerator images = provider
-    .GetImageClient("gpt-image-1-mini").AsIImageGenerator();
+    .GetImageClient("gpt-image-1-mini")
+    .AsIImageGenerator();
 ```
 
 </div>
 </div>
 
 Note:
-Quick one, but it matters. The Models block isn't text-only. The same IChatClient takes images. You build a message with a text part and an image part, hand it over, and ask about the picture. gpt-4.1-mini does vision, so that runs on GitHub Models.
-And it goes the other way too. Need an image generated? That's IImageGenerator, the same one-interface, swap-the-provider pattern. Speech-to-text is ISpeechToTextClient, same idea. Real-time audio you can do today through the provider SDK.
+Quick one, but it matters. The Models block isn't text-only. The same IChatClient takes images. Walk the code: you download the image bytes, build one ChatMessage that holds a TextContent question and a DataContent image part, and pass it to the same GetResponseAsync. The output panel is the real answer from that run, a scenic view of green mountains. gpt-4.1-mini does vision, so that runs on GitHub Models.
+And it goes the other way too. Need an image generated? That's IImageGenerator, the same one-interface, swap-the-provider pattern, shown in the last two lines. Speech-to-text is ISpeechToTextClient, same idea. Real-time audio you can do today through the provider SDK.
 So when I say "models," I mean text, images, and audio, all through the same kind of seam. One pattern, every modality.
 
 --
@@ -485,8 +540,8 @@ Microsoft.Extensions.AI is a set of core .NET libraries that provide a unified l
 </div>
 
 Note:
-Writing a tool for every system doesn't scale. MCP is the open standard that fixes that. Think of it as HTTP for tools. A server publishes its tools once, and any MCP client can use them.
-Here we connect to the public Microsoft Learn server, list its tools, and the model searches the docs for us.
+The capabilities you want already live in many different systems, databases, SaaS APIs, internal services, each with its own SDK, protocol, and architecture. Writing a custom integration for every one of them doesn't scale. MCP is the open standard that fixes that: one protocol, so an agent can reach traditionally incompatible systems through the same seam. Think of it as HTTP for tools. A server publishes its tools once, and any MCP client can use them.
+Walk the code: build an HttpClientTransport pointed at the server, CreateAsync an McpClient, ListToolsAsync to discover what it offers, then spread those tools into the same ChatOptions.Tools list from the previous slide. Here that server is the public Microsoft Learn one, and the model searches the docs for us.
 And the payoff is the interop. An MCP tool is just an AIFunction. It drops straight into the same Tools list from the previous slide. No new concept. .NET can consume MCP tools and serve them too.
 
 --
@@ -500,7 +555,7 @@ And the payoff is the interop. An MCP tool is just an AIFunction. It drops strai
 </div>
 
 Note:
-If MCP is new to you, the people who made it describe it as a USB-C port for AI. One open standard, and your app, the client, plugs into any tool server. Here that server is the public Microsoft Learn one, exposing docs search and fetch. Swap in GitHub, your own server, or hundreds of others and the protocol is the same, so you build the connector once and integrate everywhere. And the payoff: each tool arrives as just an AIFunction, the same thing from the tools slide. Now the code.
+Here's the problem MCP solves. The tools an agent needs rarely live in one place. They're scattered across different systems, each with its own SDK, protocol, and architecture, normally incompatible with each other. The people who made MCP describe the fix as a USB-C port for AI: one open standard, and your app, the client, plugs into any tool server. Here that server is the public Microsoft Learn one, exposing docs search and fetch. Swap in GitHub, your own server, or hundreds of others and the protocol is the same, so you build the connector once and reach them all. And the payoff: each tool arrives as just an AIFunction, the same thing from the tools slide. Now the code.
 
 --
 
@@ -659,6 +714,7 @@ And it sits on the same .NET foundation: dependency injection, the builder, conf
 <div class="col-left">
 
 ```csharp
+// chat is the SAME IChatClient you built in block one
 AIAgent agent = new ChatClientAgent(
     chat,
     instructions: "You are a .NET event planner.",
@@ -697,6 +753,7 @@ Your name is Luis. How can I assist you with your .NET meetup plans today?
 
 Note:
 We just defined the agent. Now here it is in one line of code, the graduated moment the whole talk has been building toward.
+Walk the code: look at the first argument, chat. That's the exact same IChatClient you built in block one, no new client. ChatClientAgent wraps it with instructions, a name, and the tools from block three. RunAsync is one autonomous call. CreateSessionAsync gives it memory across turns.
 You already have an IChatClient and tools, so you just wrap them. One line. new ChatClientAgent. That's Microsoft Agent Framework.
 No new mental model, no rewrite. A session carries the conversation so it remembers across turns. This is why we spent the whole talk on the foundation. Moving to agents is a wrap, not a rebuild.
 

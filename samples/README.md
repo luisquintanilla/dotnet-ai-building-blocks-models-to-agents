@@ -8,6 +8,7 @@ thing that solves it.
 | # | File | Block | Shows |
 | --- | --- | --- | --- |
 | 1 | `01-chat.cs` | Models | `IChatClient`, one call, swap the model |
+| 1b | `01b-ollama.cs` | Models | same code, swap the provider to local Ollama |
 | 2 | `02-vision.cs` | Models | image input to `IChatClient` (multimodal) |
 | 3 | `03-image-generation.cs` | Models | `IImageGenerator`, generate an image |
 | 4 | `04-embeddings.cs` | Data & memory | `IEmbeddingGenerator`, similarity |
@@ -60,6 +61,19 @@ later runs are quick.
 - `02-vision.cs` runs on GitHub Models because `gpt-4.1-mini` is vision-capable.
   It downloads the image and passes the bytes inline, so the model service never
   has to fetch a URL.
+- `01b-ollama.cs` proves the provider swap end to end against a model running on
+  your machine. The only change from `01-chat.cs` is the client you construct: an
+  `OllamaApiClient` (from `OllamaSharp`) that hands back the same `IChatClient`.
+  Install [Ollama](https://ollama.com), then:
+
+  ```powershell
+  ollama pull llama3.2:1b
+  dotnet run 01b-ollama.cs
+  ```
+
+  It runs fully offline with no key. The answer quality from a 1B local model
+  isn't the point; the swap is. Want a sharper answer? Pull a larger model and
+  change the one string.
 - `03-image-generation.cs` is the one sample GitHub Models can't run, because the
   catalog has no image model. Point it at your own image-capable endpoint with two
   environment variables, and sign in keyless (no API key to copy):

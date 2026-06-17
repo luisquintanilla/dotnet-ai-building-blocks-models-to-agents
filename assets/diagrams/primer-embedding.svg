@@ -45,7 +45,8 @@
     <text x="1014" y="294" text-anchor="end" fill="#ffffff" font-size="20" font-weight="700">0.05</text>
     <text x="1014" y="318" text-anchor="end" fill="#8f8f99" font-size="12" font-weight="700">far</text>
 
-    <text x="602" y="372" fill="#8f8f99" font-size="13" font-weight="600">1.0 = same meaning, 0 = unrelated. The helper ships in .NET (TensorPrimitives).</text>
+    <text x="602" y="366" fill="#8f8f99" font-size="13" font-weight="600">1.0 = same meaning, 0 = unrelated.</text>
+    <text x="602" y="388" fill="#8f8f99" font-size="13" font-weight="600">The helper ships in .NET (TensorPrimitives).</text>
 
     <text x="560" y="466" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">An embedding turns text into a vector, a point in space. Closer points, closer meaning.</text>
   </g>

@@ -31,7 +31,7 @@
     <text x="744" y="268" fill="#b4b4be" font-size="13" font-weight="600" font-family="ui-monospace, 'Cascadia Code', Consolas, monospace">microsoft_docs_fetch</text>
     <text x="726" y="308" fill="#8f8f99" font-size="13" font-weight="600">exposes its tools once</text>
 
-    <text x="560" y="380" text-anchor="middle" fill="#b4b4be" font-size="14" font-weight="600">Microsoft Learn is one server. GitHub, your own, hundreds more speak the same protocol.</text>
-    <text x="560" y="436" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">MCP is a USB-C port for AI: build the connector once, integrate everywhere.</text>
+    <text x="560" y="380" text-anchor="middle" fill="#b4b4be" font-size="14" font-weight="600">The tools you need live in many incompatible systems, each with its own SDK and protocol.</text>
+    <text x="560" y="436" text-anchor="middle" fill="#e7e7ee" font-size="16" font-weight="700">MCP is one open standard, a USB-C port for AI: build the connector once, reach them all.</text>
   </g>
 </svg>
