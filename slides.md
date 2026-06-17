@@ -859,7 +859,62 @@ Run it on a real PDF and watch the grounding improve.
 Note:
 This is the payoff for the whole swappable-blocks story. I took the template you just saw, made a branch called advanced-demo, and swapped two blocks: ingestion became layout-aware with a real PDF vision reader, and retrieval became a real pipeline with reranking and a quality gate.
 Look at what the diff touches: the project file pulls in the real building-block packages, and Program.cs composes the pipelines. What it doesn't touch is the Blazor UI or the shape of the app. That's the thesis on screen: upgrading an AI app is composing different blocks, not starting over.
-And these are the real, in-flight packages, not a mock. The next slide shows the actual retrieval code and the real output it produces.
+And these are the real, in-flight packages, not a mock. The next two slides show the actual ingestion and retrieval code, and the real output they produce.
+
+--
+
+<span class="kicker">The final demo · Real building blocks</span>
+
+## Ingestion that reads the page
+
+<div class="cols code-output">
+<div class="col-left">
+
+```csharp
+// advanced-demo: read a layout-heavy PDF as images
+var reader = new PdfPigReader(mode: PdfReadingMode.VisionOnly);
+
+builder.Services.AddIngestionPipeline()
+    .UseDocumentProcessor<VisionOcrEnricher>()     // page image -> text
+    .UseDocumentProcessor<VisionTableEnricher>()   // page image -> tables
+    .UseChunkProcessor<ContextualChunkEnricher>(); // + a one-line summary
+```
+
+</div>
+<div class="col-left">
+
+<div class="output">
+<span class="output-label">Output · gpt-5-mini on Azure OpenAI</span>
+
+```text
+Example_Emergency_Survival_Kit.pdf -> vision OCR
+
+chunk.Text     · VisionOcrEnricher
+  "1. Introduction
+   Welcome to the Life Guard X Emergency Survival Kit!
+   This comprehensive survival kit is designed to
+   help you be prepared for any emergency..."
+
+chunk.Context  · ContextualChunkEnricher
+  "Life Guard X survival kit: first aid, emergency
+   food, tools, shelter, and water purification."
+```
+
+</div>
+
+</div>
+</div>
+
+<div class="badges">
+<span class="badge ext">UglyToad.PdfPig.DataIngestion</span>
+<span class="badge">Vision OCR</span>
+</div>
+
+<p class="muted small">Same chunker, same embeddings, same SqliteVec store, same Blazor app. Only the reader and the two page enrichers changed.</p>
+
+Note:
+Here's the ingestion half, same shape as the retrieval slide that follows. The source is a layout-heavy survival-kit PDF, the kind plain text extraction mangles. We swap the reader to PdfPig in vision-only mode, so every page is rendered to an image, and two vision enrichers read those images into real text and tables with the same gpt-5-mini model. A chunk enricher then writes a one-line summary onto each chunk to help retrieval later.
+Look at the output: that text and that summary came out of a page image. Now look at what didn't change, the chunker, the embeddings, the vector store, and the whole Blazor app are untouched. We swapped the reader and added enrichers. That's the building-block story again, this time on the ingestion side.
 
 --
 
@@ -886,14 +941,14 @@ builder.Services.AddRetrievalPipeline()
 
 ```text
 Q: How do I power on the watch?
+  crag_path   Correct (5/5)
   retrieved   3 chunks (reranked)
-  crag_path   Ambiguous, needs follow-up
 
-Q: How long does the battery last?
+Q: What is the warranty period for the watch?
+  crag_path   Incorrect (1/5)
   retrieved   0 chunks
-  crag_path   Incorrect
   low_confidence: true
-  "the passages don't mention battery life"
+  "none of the passages mention warranty"
 ```
 
 </div>
@@ -910,8 +965,8 @@ Q: How long does the battery last?
 
 Note:
 Here's the real code from the branch, and the real output. The retrieval pipeline is three steps: rewrite the query with terms the docs actually use, rerank the candidates by true relevance, then CRAG, the quality gate, grades the result.
-Watch the two questions. For "how do I power on the watch?", the docs cover it, so it returns three reranked chunks and flags the answer as ambiguous, needs follow-up. Honest. For "how long does the battery last?", that spec isn't in this manual, so instead of handing the model irrelevant text to riff on, CRAG returns nothing and flags low confidence.
-That's the whole point, and it closes the loop on the problem we opened with. A bare model call will confidently make up a battery number. The retrieval building block, composed from the real Microsoft.Extensions.DataRetrieval abstraction, refuses to guess. Same Blazor app, same chat box, one block swapped.
+Watch the two questions. For "how do I power on the watch?", the manual covers it, so CRAG scores it a five, correct, and returns three reranked chunks. For "what is the warranty period?", that isn't in the manual, so CRAG scores it a one, incorrect, returns nothing, and flags low confidence instead of handing the model irrelevant text to riff on.
+That's the whole point, and it closes the loop on the problem we opened with. A bare model call will confidently make up a warranty date. The retrieval building block, composed from the real Microsoft.Extensions.DataRetrieval abstraction, refuses to guess. And the app's own SearchAsync didn't change shape, it stays one RetrieveAsync call. Same Blazor app, same chat box, one block swapped.
 
 ---
 
