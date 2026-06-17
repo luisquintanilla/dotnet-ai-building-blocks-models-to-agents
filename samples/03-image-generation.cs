@@ -1,40 +1,50 @@
-#:package OpenAI@2.11.0
+#:package Azure.AI.OpenAI@2.9.0-beta.1
 #:package Microsoft.Extensions.AI.OpenAI@10.7.0
+#:package Azure.Identity@1.21.0
 
 // Block 1 - Models are multimodal.
 // The problem: the Models block is not just chat. Your app can generate images
 // too, and you still want one abstraction when the provider changes.
 // Microsoft.Extensions.AI gives you IImageGenerator for that.
+//
+// GitHub Models doesn't host an image model, so this sample points at your own
+// image-capable endpoint. Nothing here is hard-coded: you bring the endpoint and
+// deployment through environment variables, and auth is keyless.
+//   AZURE_OPENAI_ENDPOINT          your resource, e.g. https://YOUR-RESOURCE.openai.azure.com/
+//   AZURE_OPENAI_IMAGE_DEPLOYMENT  your image deployment name (default: gpt-image-1-mini)
+// DefaultAzureCredential signs in with your `az login` (or managed identity in
+// the cloud), so there is no API key to copy or leak. See the README for setup.
+// Prefer OpenAI instead of Azure? Swap the provider line for
+// `new OpenAIClient(new ApiKeyCredential(Environment.GetEnvironmentVariable("OPENAI_API_KEY")))`
+// and the IImageGenerator code below stays the same.
 
 #pragma warning disable MEAI001
 
-using System.ClientModel;
+using Azure.AI.OpenAI;
+using Azure.Identity;
 using Microsoft.Extensions.AI;
-using OpenAI;
 
-// Image generation needs an image-capable endpoint. GitHub Models may not host
-// one. For OpenAI, replace the provider construction below with:
-// OpenAIClient provider = new(new ApiKeyCredential(token));
-// For Azure OpenAI, point the endpoint at your Azure OpenAI resource and set
-// this constant to your image deployment. The IImageGenerator code below is
-// unchanged.
-const string ImageModelOrDeployment = "dall-e-3";
+string? endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT");
+if (string.IsNullOrWhiteSpace(endpoint))
+{
+    Console.WriteLine("This sample needs an image-capable endpoint, which GitHub Models doesn't host.");
+    Console.WriteLine("Set AZURE_OPENAI_ENDPOINT to your own Azure OpenAI resource (and optionally");
+    Console.WriteLine("AZURE_OPENAI_IMAGE_DEPLOYMENT), then run again. Auth is keyless via `az login`.");
+    Console.WriteLine("See the README for setup and docs: https://learn.microsoft.com/dotnet/ai/");
+    return;
+}
 
-string token = Environment.GetEnvironmentVariable("GITHUB_TOKEN")
-    ?? throw new InvalidOperationException("Set GITHUB_TOKEN to a GitHub PAT with models:read. See README.");
+string deployment = Environment.GetEnvironmentVariable("AZURE_OPENAI_IMAGE_DEPLOYMENT") ?? "gpt-image-1-mini";
 
-OpenAIClient provider = new(
-    new ApiKeyCredential(token),
-    new OpenAIClientOptions { Endpoint = new Uri("https://models.inference.ai.azure.com") });
+AzureOpenAIClient provider = new(new Uri(endpoint), new DefaultAzureCredential());
 
-IImageGenerator generator = provider.GetImageClient(ImageModelOrDeployment).AsIImageGenerator();
+IImageGenerator generator = provider.GetImageClient(deployment).AsIImageGenerator();
 
 ImageGenerationRequest request = new("A small friendly robot building a .NET app, watercolor icon style.");
 ImageGenerationOptions options = new()
 {
     Count = 1,
-    MediaType = "image/png",
-    ResponseFormat = ImageGenerationResponseFormat.Data
+    MediaType = "image/png"
 };
 
 ImageGenerationResponse response = await generator.GenerateAsync(request, options);
@@ -67,8 +77,6 @@ switch (image)
         break;
 }
 
-// That's it! Swap the provider or endpoint for an image-capable service. The
-// prompt and IImageGenerator code stay the same.
-
-
-
+// That's it! The endpoint and deployment came from your environment, the prompt
+// and IImageGenerator code stay the same. Point them at any image-capable
+// provider and the rest of your app never changes.

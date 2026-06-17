@@ -12,6 +12,10 @@ npm-debug.log*
 bin/
 obj/
 
+# Generated sample output / Aspire scratch (never commit)
+samples/image-generation-output.png
+**/aspire.config.json
+
 # Private speaker material (not for the public repo)
 talk/demo-runbook.md
 

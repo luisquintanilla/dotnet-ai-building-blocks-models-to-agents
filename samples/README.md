@@ -59,9 +59,25 @@ later runs are quick.
   or `IEmbeddingGenerator`, so it keeps working.
 - `02-vision.cs` runs on GitHub Models because `gpt-4.1-mini` is vision-capable.
   It downloads the image and passes the bytes inline, so the model service never
-  has to fetch a URL. `03-image-generation.cs` needs an image-capable endpoint,
-  such as OpenAI or Azure OpenAI. Swap the provider lines, and keep the
-  `IImageGenerator` code.
+  has to fetch a URL.
+- `03-image-generation.cs` is the one sample GitHub Models can't run, because the
+  catalog has no image model. Point it at your own image-capable endpoint with two
+  environment variables, and sign in keyless (no API key to copy):
+
+  ```powershell
+  # PowerShell - your own Azure OpenAI resource
+  $env:AZURE_OPENAI_ENDPOINT = "https://YOUR-RESOURCE.openai.azure.com/"
+  $env:AZURE_OPENAI_IMAGE_DEPLOYMENT = "gpt-image-1-mini"  # optional; this is the default
+  az login   # DefaultAzureCredential uses this; nothing is hard-coded in the file
+  dotnet run 03-image-generation.cs
+  ```
+
+  Deploy an image model first (for example `gpt-image-1-mini` on `GlobalStandard`);
+  see the [Azure OpenAI image generation docs](https://learn.microsoft.com/azure/ai-foundry/openai/how-to/dall-e).
+  Note that the `gpt-image-1` family always returns image bytes and rejects a
+  `response_format`, so the sample doesn't set one. Prefer OpenAI? Swap the
+  provider line for an `OpenAIClient` with `OPENAI_API_KEY`; the `IImageGenerator`
+  code stays the same.
 - `07-mcp.cs` connects to the live Microsoft Learn MCP server. Its doc results can
   be larger than the free GitHub Models input limit (8000 tokens), so the sample
   adds a small `DelegatingChatClient` that trims each tool result before it goes

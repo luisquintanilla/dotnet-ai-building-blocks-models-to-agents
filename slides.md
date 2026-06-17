@@ -208,7 +208,7 @@ ChatResponse seen = await chat.GetResponseAsync([msg]);
 
 // a picture out, same kind of interface
 IImageGenerator images = provider
-    .GetImageClient("dall-e-3").AsIImageGenerator();
+    .GetImageClient("gpt-image-1-mini").AsIImageGenerator();
 ```
 
 </div>
