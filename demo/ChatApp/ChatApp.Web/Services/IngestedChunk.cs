@@ -21,7 +21,7 @@ public class IngestedChunk
     [JsonPropertyName("content")]
     public required string Text { get; set; }
 
-    [VectorStoreData(StorageName = "context")]
+    [VectorStoreData(StorageName = "contextual_summary")]
     [JsonPropertyName("context")]
     public string? Context { get; set; }
 
