@@ -1096,7 +1096,7 @@ Grab the repo link, and let's open it up for questions.
 
 <p class="subtitle">From Models to Agents: The Essential Building Blocks of AI Apps</p>
 
-<p class="byline">Luis Quintanilla &nbsp;·&nbsp; github.com/luisquintanilla</p>
+<p class="byline">Luis Quintanilla &nbsp;·&nbsp; github.com/luisquintanilla &nbsp;·&nbsp; Luis.Quintanilla@microsoft.com</p>
 
 </div>
 
