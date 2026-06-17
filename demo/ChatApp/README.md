@@ -5,20 +5,12 @@ This project is an AI chat application that demonstrates how to chat with custom
 >[!NOTE]
 > Before running this project you need to configure the API keys or endpoints for the providers you have chosen. See below for details specific to your choices.
 
-### Known Issues
-
-#### Errors running Ollama or Docker
-
-A recent incompatibility was found between Ollama and Docker Desktop. This issue results in runtime errors when connecting to Ollama, and the workaround for that can lead to Docker not working for Aspire projects.
-
-This incompatibility can be addressed by upgrading to Docker Desktop 4.41.1. See [ollama/ollama#9509](https://github.com/ollama/ollama/issues/9509#issuecomment-2842461831) for more information and a link to install the version of Docker Desktop with the fix.
-
 # Configure the AI Model Provider
 
 ## Using Azure OpenAI (keyless)
 
 This app is configured for Azure OpenAI with **keyless** authentication. There is no API key to
-manage — the client uses `DefaultAzureCredential` (your `az login`).
+manage. The client uses `DefaultAzureCredential` (your `az login`).
 
 1. Sign in and make sure you have access (one time):
 
@@ -35,8 +27,10 @@ manage — the client uses `DefaultAzureCredential` (your `az login`).
    dotnet user-secrets set ConnectionStrings:openai "https://<your-resource>.openai.azure.com/"
    ```
 
-The app expects a chat deployment named `chat` and an embeddings deployment named `embedding`.
-Adjust the names in `ChatApp.Web/Program.cs` if yours differ.
+The app expects a **vision-capable** chat deployment named `gpt-5-mini` and an embeddings
+deployment named `embedding`. Adjust the names in `ChatApp.Web/Program.cs` if yours differ.
+The chat model must support image input, because the PDF reader renders pages to images and
+uses the chat model for OCR (see "Advanced RAG building blocks" below).
 
 Learn more about [keyless authentication for Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/how-to/managed-identity).
 
@@ -79,3 +73,33 @@ This template leverages JavaScript libraries to provide essential functionality.
 To learn more about development with .NET and AI, check out the following links:
 
 * [AI for .NET Developers](https://learn.microsoft.com/dotnet/ai/)
+
+# Advanced RAG building blocks (advanced-demo branch)
+
+This branch upgrades the scaffolded template to use the real, in-flight RAG building
+blocks from the .NET AI stack. The Blazor UI and the shape of the app stay the same. Two
+blocks change:
+
+- **Ingestion** uses `PdfPigReader(PdfReadingMode.VisionOnly)`. It renders each PDF page to
+  an image and uses the vision-capable chat model (`gpt-5-mini`) to OCR the text, then runs
+  document and chunk enrichers. There is **no ONNX model and no extra container** for
+  ingestion. This is the same vision path as the `PdfAIngest` reference app.
+- **Retrieval** uses the real `Microsoft.Extensions.DataRetrieval` `RetrievalPipeline`,
+  composed with `AddRetrievalPipeline().UseQueryExpansion().UseLlmReranking().UseCrag()`.
+  CRAG grades each result and flags low-confidence answers instead of guessing. This
+  replaces the template's hand-rolled query rewrite and rank fusion.
+
+### Vendored packages
+
+These building blocks ship from open PRs, so the branch vendors a coherent `-dev` package
+set in `local-packages/` and adds a `local` NuGet source alongside nuget.org (see
+`nuget.config`). Nothing extra to install. The set covers `Microsoft.Extensions.AI`,
+`Microsoft.Extensions.DataIngestion`, `Microsoft.Extensions.DataRetrieval`, `MEDIExtensions`
+(concrete processors + fluent DI), and `UglyToad.PdfPig.DataIngestion` (the vision reader).
+
+### Pre-ingest once before a live demo
+
+Vision OCR ingestion calls the chat model for every page, so the first ingest is slow. The
+vector store is **SqliteVec** and persists to disk, so you only pay that cost once. Run the
+app once ahead of time to ingest the sample PDFs, then the live run just queries the store.
+If you change the source documents, delete the SqliteVec database file to force a re-ingest.

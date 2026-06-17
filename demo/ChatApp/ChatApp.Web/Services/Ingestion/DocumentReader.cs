@@ -1,11 +1,14 @@
 using Microsoft.Extensions.DataIngestion;
+using UglyToad.PdfPig.DataIngestion;
 
 namespace ChatApp.Web.Services.Ingestion;
 
 internal sealed class DocumentReader(DirectoryInfo rootDirectory) : IngestionDocumentReader
 {
     private readonly MarkdownReader _markdownReader = new();
-    private readonly MarkItDownMcpReader _pdfReader = new(mcpServerUri: GetMarkItDownMcpServerUrl());
+    // PDFs are extracted with a vision model (the gpt-5-mini deployment),
+    // layout and all. No ONNX model file, no external converter container.
+    private readonly PdfPigReader _pdfReader = new(mode: PdfReadingMode.VisionOnly);
 
     public override Task<IngestionDocument> ReadAsync(FileInfo source, string identifier, string? mediaType = null, CancellationToken cancellationToken = default)
     {
@@ -33,10 +36,4 @@ internal sealed class DocumentReader(DirectoryInfo rootDirectory) : IngestionDoc
             ".md" => "text/markdown",
             _ => null
         };
-
-    private static Uri GetMarkItDownMcpServerUrl()
-    {
-        var markItDownMcpUrl = $"{Environment.GetEnvironmentVariable("MARKITDOWN_MCP_URL")}/mcp";
-        return new Uri(markItDownMcpUrl);
-    }
 }

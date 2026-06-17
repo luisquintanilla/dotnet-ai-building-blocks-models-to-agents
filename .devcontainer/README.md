@@ -12,11 +12,14 @@ Open it two ways:
 
 ## What it covers
 
-- `samples/` — the .NET 10 file-based apps, run against GitHub Models.
-- The RevealJS deck — `npm run preview`, served on port 8000 (auto-forwarded).
-- `demo/ChatApp` — the Aspire app. The Aspire CLI is preinstalled (devcontainer feature) and Docker
-  is available through docker-in-docker, so `aspire run` can pull and run its markitdown container.
-  Follow [`demo/README.md`](../demo/README.md) to configure Azure OpenAI (keyless) and run it.
+- `samples/`: the .NET 10 file-based apps, run against GitHub Models.
+- The RevealJS deck: `npm run preview`, served on port 8000 (auto-forwarded).
+- `demo/ChatApp`: the Aspire app. The Aspire CLI is preinstalled (devcontainer feature), so
+  `aspire run` works out of the box. On this `advanced-demo` branch the app needs no Docker (PDF
+  OCR runs through the vision-capable chat model and the vector store is in-process SqliteVec).
+  docker-in-docker is still available so the `main`-branch template, which runs a markitdown MCP
+  container, also works here. Follow [`demo/README.md`](../demo/README.md) to configure Azure
+  OpenAI (keyless) and run it.
 
 ## Set GITHUB_TOKEN for the samples
 
@@ -110,7 +113,7 @@ dotnet run 01-chat.cs
 # Presentation (build + serve on http://localhost:8000)
 npm run preview
 
-# Demo app (Aspire + Azure OpenAI, keyless). Docker is available, so this works here too.
+# Demo app (Aspire + Azure OpenAI, keyless). No Docker needed on this branch.
 az login
 cd demo/ChatApp
 aspire run

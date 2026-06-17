@@ -1,5 +1,5 @@
 ﻿using ChatApp.Web.Services.Ingestion;
-using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DataRetrieval;
 using Microsoft.Extensions.VectorData;
 
 namespace ChatApp.Web.Services;
@@ -8,7 +8,7 @@ public class SemanticSearch(
     VectorStoreCollection<string, IngestedChunk> vectorCollection,
     [FromKeyedServices("ingestion_directory")] DirectoryInfo ingestionDirectory,
     DataIngestor dataIngestor,
-    IChatClient chatClient)
+    RetrievalPipeline retrievalPipeline)
 {
     private Task? _ingestionTask;
 
@@ -24,66 +24,38 @@ public class SemanticSearch(
             return [];
         }
 
-        var searchOptions = new VectorSearchOptions<IngestedChunk>
-        {
-            Filter = documentIdFilter is { Length: > 0 } ? record => record.DocumentId == documentIdFilter : null,
-        };
+        // The real DataRetrieval pipeline: rewrite the query, over-fetch, rerank by true
+        // relevance, then drop weak matches with a quality gate (CRAG). Composed in Program.cs.
+        var results = await retrievalPipeline.RetrieveAsync(
+            vectorCollection,
+            text,
+            topK: maxResults,
+            contentSelector: chunk => chunk.Text,
+            cancellationToken: default);
 
-        var fetchCount = Math.Max(maxResults * 3, maxResults);
-        var queries = await ExpandSearchQueriesAsync(text);
-        Dictionary<Guid, RankedChunk> rankedChunks = [];
+        LastRetrievalMetadata = results.Metadata;
 
-        foreach (var query in queries)
-        {
-            var rank = 0;
-            await foreach (var result in vectorCollection.SearchAsync(query, fetchCount, searchOptions))
+        // Map RetrievalChunks back to IngestedChunk records for the UI
+        var chunks = results.Chunks
+            .Select(c =>
             {
-                rank++;
-                if (!rankedChunks.TryGetValue(result.Record.Key, out var rankedChunk))
+                c.Record.TryGetValue(nameof(IngestedChunk.Key), out var keyObj);
+                c.Record.TryGetValue(nameof(IngestedChunk.DocumentId), out var docIdObj);
+                return new IngestedChunk
                 {
-                    rankedChunk = new(result.Record);
-                    rankedChunks.Add(result.Record.Key, rankedChunk);
-                }
-
-                rankedChunk.Score += 1.0 / (60 + rank);
-            }
-        }
-
-        return rankedChunks.Values
-            .OrderByDescending(result => result.Score)
-            .Take(maxResults)
-            .Select(result => result.Chunk)
+                    Key = keyObj?.ToString() ?? "",
+                    DocumentId = docIdObj?.ToString() ?? "",
+                    Text = c.Content
+                };
+            })
+            .Where(c => documentIdFilter is not { Length: > 0 } || c.DocumentId == documentIdFilter)
             .ToList();
+
+        return chunks;
     }
 
-    private async Task<IReadOnlyList<string>> ExpandSearchQueriesAsync(string text)
-    {
-        var expanded = await RewriteQueryAsync(text);
-        return string.Equals(text.Trim(), expanded, StringComparison.OrdinalIgnoreCase)
-            ? [text]
-            : [text, expanded];
-    }
-
-    private async Task<string> RewriteQueryAsync(string text)
-    {
-        try
-        {
-            var response = await chatClient.GetResponseAsync(
-                $"Rephrase this search query in one concise sentence using likely document terms. Return only the query.\n\nQuery: {text}",
-                new ChatOptions { MaxOutputTokens = 60 });
-
-            var rewritten = response.Text?.Trim().Trim('"', '\'');
-            return string.IsNullOrWhiteSpace(rewritten) ? text : rewritten;
-        }
-        catch
-        {
-            return text;
-        }
-    }
-
-    private sealed class RankedChunk(IngestedChunk chunk)
-    {
-        public IngestedChunk Chunk { get; } = chunk;
-        public double Score { get; set; }
-    }
+    /// <summary>
+    /// Pipeline metadata from the last retrieval (e.g., CRAG score, reranking info).
+    /// </summary>
+    public IDictionary<string, object?>? LastRetrievalMetadata { get; private set; }
 }

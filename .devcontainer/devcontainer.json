@@ -2,7 +2,9 @@
   // Dev container for the talk. It gives you everything to:
   //   - run the .NET 10 file-based samples in samples/ against GitHub Models,
   //   - build and serve the RevealJS presentation with npm, and
-  //   - run demo/ChatApp with the Aspire CLI, since Docker is available via docker-in-docker.
+  //   - run demo/ChatApp with the Aspire CLI. The advanced-demo app needs no Docker (in-process
+  //     SqliteVec, PDF OCR via the vision-capable chat model), but docker-in-docker is available so
+  //     the main-branch template (which wires a markitdown MCP container) also runs here.
   // See .devcontainer/README.md.
   "name": "dotnet-ai-building-blocks",
 
@@ -19,7 +21,9 @@
     "ghcr.io/devcontainers/features/github-cli:1": {},
     // az lets you sign in and configure Azure OpenAI (see .devcontainer/README.md).
     "ghcr.io/devcontainers/features/azure-cli:1": {},
-    // Docker so Aspire can run demo/ChatApp and its markitdown container.
+    // The advanced-demo app itself needs no Docker (vision OCR via the chat model, in-process
+    // SqliteVec). We keep docker-in-docker so the main-branch template still runs here too, since
+    // its AppHost wires a markitdown MCP container.
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
 
